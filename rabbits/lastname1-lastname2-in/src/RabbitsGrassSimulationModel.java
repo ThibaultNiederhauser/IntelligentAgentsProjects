@@ -1,6 +1,12 @@
+import java.awt.Color;
+
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimModelImpl;
 import uchicago.src.sim.engine.SimInit;
+import uchicago.src.sim.gui.DisplaySurface;
+import uchicago.src.sim.gui.ColorMap;
+import uchicago.src.sim.gui.Value2DDisplay;
+
 
 /**
  * Class that implements the simulation model for the rabbits grass
@@ -8,13 +14,14 @@ import uchicago.src.sim.engine.SimInit;
  * order to run Repast simulation. It manages the entire RePast
  * environment and the simulation.
  *
- * @author
+ * @author Sfera e basta
  */
 
 
+//public class RabbitsGrassSimulationModel extends SimModelImpl {
 public class RabbitsGrassSimulationModel extends SimModelImpl {
 
-    public static void main(String[] args) {
+        public static void main(String[] args) {
 
         System.out.println("Crazy rabbit goes brrrr");
 
@@ -28,20 +35,26 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
     }
 
     private Schedule schedule;
+    private RabbitsGrassSimulationSpace rabbitsGS;
+    private DisplaySurface displaySurf;
 
     // Parameters skra
+    //todo add all
 
 	private static final int GRIDSIZE = 20;
 	private static final int NUMINITRABBITS = 15;
+    private static final int NUMINITGRASS = 40;
 
 	private int gridSize = GRIDSIZE;
     private int numInitRabbits = NUMINITRABBITS;
+    private int numInitGrass = NUMINITGRASS;
 
     public void begin() {
         // Start everything
         buildModel();
         buildSchedule();
         buildDisplay();
+        displaySurf.display();
     }
 
     public String[] getInitParam() {
@@ -59,11 +72,24 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
     public void setup() {
         // TODO Auto-generated method stub
-		System.out.println("Running setup");
+        System.out.println("Running setup");
+        rabbitsGS = null;
+
+        if (displaySurf != null){
+            displaySurf.dispose();
+        }
+        displaySurf = null;
+
+        displaySurf = new DisplaySurface(this, "Rabbit Model Window 1");
+
+        registerDisplaySurface("Rabbit Model Window 1", displaySurf);
+
     }
 
     public void buildModel() {
 		System.out.println("Building model");
+		rabbitsGS = new RabbitsGrassSimulationSpace(gridSize);
+		rabbitsGS.spreadFood(numInitGrass);
     }
 
     public void buildSchedule() {
@@ -73,7 +99,20 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
     }
 
     public void buildDisplay() {
-		System.out.println("Build display");
+        System.out.println("Build display");
+
+        ColorMap map = new ColorMap();
+
+        for(int i = 1; i<16; i++){
+            map.mapColor(i, new Color((int)(i * 8 + 127), 0, 0));
+        }
+        map.mapColor(0, Color.white);
+
+        Value2DDisplay displayMoney =
+                new Value2DDisplay(rabbitsGS.getCurrentFoodSpace(), map);
+
+        displaySurf.addDisplayable(displayMoney, "Food");
+
     }
 
 	public Schedule getSchedule(){
@@ -88,11 +127,20 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		numInitRabbits = na;
 	}
 
-	public int getGridSize(){
+    public int getNumInitGrass(){
+        return numInitGrass;
+    }
+
+    public void setNumInitGrass(int na){
+        numInitGrass = na;
+    }
+
+    public int getGridSize(){
     	return gridSize;
 	}
 
 	public void setGridSize(int size){
     	gridSize = size;
 	}
+
 }
