@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimModelImpl;
@@ -6,6 +7,9 @@ import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.ColorMap;
 import uchicago.src.sim.gui.Value2DDisplay;
+import uchicago.src.sim.gui.Object2DDisplay;
+import uchicago.src.sim.engine.BasicAction;
+import uchicago.src.sim.util.SimUtilities;
 
 
 /**
@@ -37,6 +41,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
     private Schedule schedule;
     private RabbitsGrassSimulationSpace rabbitsGS;
     private DisplaySurface displaySurf;
+    private ArrayList<RabbitsGrassSimulationAgent> rabbitList;
 
     // Parameters skra
     //todo add all
@@ -71,9 +76,11 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
     }
 
     public void setup() {
-        // TODO Auto-generated method stub
+        // setup
         System.out.println("Running setup");
+        rabbitList = new ArrayList<RabbitsGrassSimulationAgent>();
         rabbitsGS = null;
+        schedule = new Schedule(1);
 
         if (displaySurf != null){
             displaySurf.dispose();
@@ -90,12 +97,47 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		System.out.println("Building model");
 		rabbitsGS = new RabbitsGrassSimulationSpace(gridSize);
 		rabbitsGS.spreadFood(numInitGrass);
+
+        for(int i = 0; i < numInitRabbits; i++){
+            addNewAgent();
+        }
+
+        for (RabbitsGrassSimulationAgent rabbitsGrassSimulationAgent : rabbitList) {
+            rabbitsGrassSimulationAgent.report();
+        }
     }
 
     public void buildSchedule() {
 		System.out.println("Building schedule");
 
-		System.out.println("I have no idea what this does");
+		class BunnyStep extends BasicAction {
+		    public void execute() {
+		        SimUtilities.shuffle(rabbitList);
+		        for (int i = 0; i< rabbitList.size(); i++){
+		            RabbitsGrassSimulationAgent ra = (RabbitsGrassSimulationAgent) rabbitList.get(i);
+		            ra.step();
+                }
+
+                int deadAgents = reapDeadAgents();
+                for(int i =0; i < deadAgents; i++){
+                    //handleAgentDeath();
+                    continue;
+                }
+
+                displaySurf.updateDisplay();
+            }
+        }
+
+        schedule.scheduleActionBeginning(0, new BunnyStep());
+
+        class RabbitCountLiving extends BasicAction {
+            public void execute(){
+                countLivingRabbits();
+            }
+        }
+
+        schedule.scheduleActionAtInterval(10, new RabbitCountLiving());
+
     }
 
     public void buildDisplay() {
@@ -108,14 +150,48 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
         }
         map.mapColor(0, Color.white);
 
-        Value2DDisplay displayMoney =
+        Value2DDisplay displayFood =
                 new Value2DDisplay(rabbitsGS.getCurrentFoodSpace(), map);
 
-        displaySurf.addDisplayable(displayMoney, "Food");
+        Object2DDisplay displayAgents = new Object2DDisplay(rabbitsGS.getCurrentAgentSpace());
+        displayAgents.setObjectList(rabbitList);
+
+        displaySurf.addDisplayable(displayFood, "Food");
+        displaySurf.addDisplayable(displayAgents, "Agents");
 
     }
 
-	public Schedule getSchedule(){
+    private void addNewAgent(){
+        RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent();
+        rabbitList.add(a);
+        rabbitsGS.addAgent(a);
+    }
+
+    private int countLivingRabbits(){
+        int livingAgents = 0;
+        for (RabbitsGrassSimulationAgent bunny : rabbitList) {
+            if(bunny.getAge() < 100)
+                livingAgents++;
+        }
+        System.out.println("Number of living agents is: " + livingAgents);
+
+        return livingAgents;
+    }
+
+    private int reapDeadAgents(){
+        int count = 0;
+        for(int i = (rabbitList.size() - 1); i >= 0 ; i--){
+            RabbitsGrassSimulationAgent cda = (RabbitsGrassSimulationAgent)rabbitList.get(i);
+            if(cda.getAge() > 100){
+                rabbitsGS.removeAgentAt(cda.getX(), cda.getY());
+                rabbitList.remove(i);
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public Schedule getSchedule(){
 		return schedule;
 	}
 
