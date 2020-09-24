@@ -34,12 +34,13 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	private static final int GRIDSIZE = 20;
 	private static final int NUMINITGRASS = 100;
 	private static final int ENERGYINIT = 1000;
-	private static final int GRASSPERSTEP = 1;
+	private static final int GRASSGROWTHRATE = 1;
 
 
 	private int numInitRabbits = NUMINITRABBITS;
 	private int gridSize = GRIDSIZE;
 	private int numInitGrass = NUMINITGRASS;
+	private int grassGrowthRate = GRASSGROWTHRATE;
 
 	private Schedule schedule;
 	private RabbitsGrassSimulationSpace rgsSpace;
@@ -185,11 +186,11 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 		schedule.scheduleActionAtInterval(10, new RabbitGrassUpdateAgentEnergy());
 
-		class RabbitGrassGrowGrass extends BasicAction {
-			public void execute() {rgsSpace.spreadGrass(GRASSPERSTEP);}
+		class RabbitGrassGrowthGrass extends BasicAction {
+			public void execute() {rgsSpace.spreadGrass(grassGrowthRate);}
 		}
 
-		schedule.scheduleActionAtInterval(1, new RabbitGrassGrowGrass());
+		schedule.scheduleActionAtInterval(1, new RabbitGrassGrowthGrass());
 
 	}
 
@@ -288,6 +289,14 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 	public void setNumInitGrass(int i) {
 		numInitGrass = i;
+	}
+
+	public int getGrassGrowthRate() {
+		return grassGrowthRate;
+	}
+
+	public void setGrassGrowthRate(int i) {
+		grassGrowthRate = i;
 	}
 
 }
