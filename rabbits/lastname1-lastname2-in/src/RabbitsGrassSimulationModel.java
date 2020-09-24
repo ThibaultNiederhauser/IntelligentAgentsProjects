@@ -1,6 +1,21 @@
+import java.awt.Color;
+import java.util.ArrayList;
+
+import uchicago.src.sim.analysis.BinDataSource;
+import uchicago.src.sim.analysis.DataSource;
+import uchicago.src.sim.analysis.OpenHistogram;
+import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimModelImpl;
 import uchicago.src.sim.engine.SimInit;
+import uchicago.src.sim.gui.DisplaySurface;
+import uchicago.src.sim.gui.ColorMap;
+import uchicago.src.sim.gui.Object2DDisplay;
+import uchicago.src.sim.gui.Value2DDisplay;
+import uchicago.src.sim.engine.BasicAction;
+import uchicago.src.sim.util.SimUtilities;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
+
 
 /**
  * Class that implements the simulation model for the rabbits grass
@@ -12,47 +27,270 @@ import uchicago.src.sim.engine.SimInit;
  */
 
 
-public class RabbitsGrassSimulationModel extends SimModelImpl {		
+public class RabbitsGrassSimulationModel extends SimModelImpl {
 
-		public static void main(String[] args) {
-			
-			System.out.println("Rabbit skeleton");
+	//Default Values
+	private static final int NUMRABBITS = 100;
+	private static final int GRIDSIZE = 20;
+	private static final int TOTALGRASS = 1000;
+	private static final int ENERGYINIT = 1000;
+	private static final int GRASSPERSTEP = 1;
 
-			SimInit init = new SimInit();
-			RabbitsGrassSimulationModel model = new RabbitsGrassSimulationModel();
-			// Do "not" modify the following lines of parsing arguments
-			if (args.length == 0) // by default, you don't use parameter file nor batch mode 
-				init.loadModel(model, "", false);
-			else
-				init.loadModel(model, args[0], Boolean.parseBoolean(args[1]));
-			
+
+	private int numRabbits = NUMRABBITS;
+	private int gridSize = GRIDSIZE;
+	private int grass = TOTALGRASS;
+
+	private Schedule schedule;
+	private RabbitsGrassSimulationSpace rgsSpace;
+	private DisplaySurface displaySurf;
+	private ArrayList agentList;
+	private OpenSequenceGraph amountOfGrassInSpace;
+	private OpenHistogram agentEnergyDistribution;
+
+
+	class grassInSpace implements DataSource, Sequence {
+
+		public Object execute() {
+			return new Double(getSValue());
 		}
 
-		public void begin() {
-			// TODO Auto-generated method stub
-			
+		public double getSValue() {
+			return (double)rgsSpace.getTotalGrass();
+		}
+	}
+
+	class agentEnergy implements BinDataSource{
+		public double getBinValue(Object o) {
+			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) o;
+			return (double)rga.getEnergy();
+		}
+	}
+
+	public static void main(String[] args) {
+
+		System.out.println("Rabbit skeleton");
+
+		SimInit init = new SimInit();
+		RabbitsGrassSimulationModel model = new RabbitsGrassSimulationModel();
+		// Do "not" modify the following lines of parsing arguments
+		if (args.length == 0) // by default, you don't use parameter file nor batch mode
+			init.loadModel(model, "", false);
+		else
+			init.loadModel(model, args[0], Boolean.parseBoolean(args[1]));
+
+	}
+
+	public void setup() {
+		// TODO Auto-generated method stub
+		System.out.println("Running setup");
+		rgsSpace = null;
+		agentList = new ArrayList();
+		schedule = new Schedule(1);
+
+		// Tear down Displays
+		if (displaySurf != null){
+			displaySurf.dispose();
+		}
+		displaySurf = null;
+
+		if (amountOfGrassInSpace != null){
+			amountOfGrassInSpace.dispose();
+		}
+		amountOfGrassInSpace = null;
+
+		if (agentEnergyDistribution != null){
+			agentEnergyDistribution.dispose();
+		}
+		agentEnergyDistribution = null;
+
+		//Create Displays
+		displaySurf = new DisplaySurface(this, "Rabbit Grass Model Window 1");
+		amountOfGrassInSpace = new OpenSequenceGraph("Amount Of Grass In Space",this);
+		agentEnergyDistribution = new OpenHistogram("Agent Energy", 8, 0);
+
+
+		//Register Displays
+		registerDisplaySurface("Rabbit Grass Model Window 1", displaySurf);
+		this.registerMediaProducer("Plot", amountOfGrassInSpace);
+
+	}
+
+	public void begin() {
+		buildModel();
+		buildSchedule();
+		buildDisplay();
+
+		displaySurf.display();
+		amountOfGrassInSpace.display();
+		agentEnergyDistribution.display();
+	}
+
+	public void buildModel() {
+		System.out.println("Running BuildModel");
+		rgsSpace = new RabbitsGrassSimulationSpace(gridSize);
+		rgsSpace.spreadGrass(grass);
+
+		for(int i = 0; i < numRabbits; i++){
+			addNewRabbit();
 		}
 
-		public String[] getInitParam() {
-			// TODO Auto-generated method stub
-			// Parameters to be set by users via the Repast UI slider bar
-			// Do "not" modify the parameters names provided in the skeleton code, you can add more if you want 
-			String[] params = { "GridSize", "NumInitRabbits", "NumInitGrass", "GrassGrowthRate", "BirthThreshold"};
-			return params;
+		for(int i = 0; i < agentList.size(); i++){
+			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
+			rga.report();
 		}
 
-		public String getName() {
-			// TODO Auto-generated method stub
-			return null;
+		displaySurf.display();
+	}
+
+	public void buildSchedule() {
+		System.out.println("Running Buildschedule");
+
+		class RabbitGrassStep extends BasicAction {
+			public void execute() {
+				SimUtilities.shuffle(agentList);
+				for(int i =0; i < agentList.size(); i++){
+					RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
+					rga.step();
+				}
+				int deadAgents = reapDeadAgents();
+				displaySurf.updateDisplay();
+
+			}
+		}
+		schedule.scheduleActionBeginning(0, new RabbitGrassStep());
+
+
+		class CarryDropCountLiving extends BasicAction {
+			public void execute(){
+				countLivingAgents();
+			}
 		}
 
-		public Schedule getSchedule() {
-			// TODO Auto-generated method stub
-			return null;
+		schedule.scheduleActionAtInterval(10, new CarryDropCountLiving());
+
+		class RabbitGrassUpdateGrassInSpace extends BasicAction {
+			public void execute(){
+				amountOfGrassInSpace.step();
+			}
 		}
 
-		public void setup() {
-			// TODO Auto-generated method stub
-			
+		schedule.scheduleActionAtInterval(10, new RabbitGrassUpdateGrassInSpace());
+
+		class RabbitGrassUpdateAgentEnergy extends BasicAction {
+			public void execute(){
+				agentEnergyDistribution.step();
+			}
 		}
+
+		schedule.scheduleActionAtInterval(10, new RabbitGrassUpdateAgentEnergy());
+
+		class RabbitGrassGrowGrass extends BasicAction {
+			public void execute() {rgsSpace.spreadGrass(GRASSPERSTEP);}
+		}
+
+		schedule.scheduleActionAtInterval(1, new RabbitGrassGrowGrass());
+
+	}
+
+	public void buildDisplay() {
+		System.out.println("Running BuildDisplay");
+		ColorMap map = new ColorMap();
+
+		for(int i = 1; i<16; i++){
+			map.mapColor(i, new Color((int)(i * 8 + 127), 0, 0));
+		}
+		map.mapColor(0, Color.white);
+
+		Value2DDisplay displayGrass=
+				new Value2DDisplay(rgsSpace.getCurrentGrassSpace(), map);
+
+
+		Object2DDisplay displayAgents = new Object2DDisplay(rgsSpace.getCurrentAgentSpace());
+		displayAgents.setObjectList(agentList);
+
+		displaySurf.addDisplayableProbeable(displayGrass, "Grass");
+		displaySurf.addDisplayableProbeable(displayAgents, "Agents");
+
+		amountOfGrassInSpace.addSequence("Grass In Space", new grassInSpace());
+		agentEnergyDistribution.createHistogramItem("Agent Wealth",agentList,new agentEnergy());
+
+	}
+
+
+	public String[] getInitParam() {
+		// TODO Auto-generated method stub
+		// Parameters to be set by users via the Repast UI slider bar
+		// Do "not" modify the parameters names provided in the skeleton code, you can add more if you want
+		String[] params = {"GridSize", "NumInitRabbits", "NumInitGrass", "GrassGrowthRate", "BirthThreshold"};
+		return params;
+	}
+
+	public String getName() {
+		return "Rabbits Grass Simulation";
+	}
+
+	private void addNewRabbit(){
+		RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(ENERGYINIT);
+		agentList.add(a);
+		rgsSpace.addAgent(a);
+
+	}
+
+	private int countLivingAgents(){
+		int livingAgents = 0;
+		for(int i = 0; i < agentList.size(); i++){
+			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
+			if(rga.getEnergy() > 0) livingAgents++;
+		}
+		System.out.println("Number of living agents is: " + livingAgents);
+
+		return livingAgents;
+	}
+
+	private int reapDeadAgents(){
+		int count = 0;
+		for(int i = (agentList.size() - 1); i >= 0 ; i--){
+			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
+			if(rga.getEnergy() < 1){
+				rgsSpace.removeAgentAt(rga.getX(), rga.getY());
+				agentList.remove(i);
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public Schedule getSchedule() {
+		// TODO Auto-generated method stub
+		return schedule;
+	}
+
+	public int getNumRabbits() {
+		return numRabbits;
+	}
+
+	public void setNumRabbits(int nr) {
+		numRabbits = nr;
+	}
+
+	public int getGridSize() {
+		return gridSize;
+	}
+
+	public void setGridSize(int gs) {
+		gridSize = gs;
+	}
+
+	public int getGrass() {
+		return grass;
+	}
+
+	public void setGrass(int i) {
+		grass = i;
+	}
+
 }
+
+
+
