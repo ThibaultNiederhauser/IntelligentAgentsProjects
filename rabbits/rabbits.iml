@@ -15,5 +15,6 @@
     <orderEntry type="library" name="log4j-1.2.15" level="project" />
     <orderEntry type="library" name="logist" level="project" />
     <orderEntry type="library" name="plot" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>

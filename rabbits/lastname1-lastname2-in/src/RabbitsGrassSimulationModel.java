@@ -30,16 +30,16 @@ import uchicago.src.sim.analysis.OpenSequenceGraph;
 public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 	//Default Values
-	private static final int NUMRABBITS = 100;
+	private static final int NUMINITRABBITS = 100;
 	private static final int GRIDSIZE = 20;
-	private static final int TOTALGRASS = 1000;
+	private static final int NUMINITGRASS = 100;
 	private static final int ENERGYINIT = 1000;
 	private static final int GRASSPERSTEP = 1;
 
 
-	private int numRabbits = NUMRABBITS;
+	private int numInitRabbits = NUMINITRABBITS;
 	private int gridSize = GRIDSIZE;
-	private int grass = TOTALGRASS;
+	private int numInitGrass = NUMINITGRASS;
 
 	private Schedule schedule;
 	private RabbitsGrassSimulationSpace rgsSpace;
@@ -129,9 +129,9 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	public void buildModel() {
 		System.out.println("Running BuildModel");
 		rgsSpace = new RabbitsGrassSimulationSpace(gridSize);
-		rgsSpace.spreadGrass(grass);
+		rgsSpace.spreadGrass(numInitGrass);
 
-		for(int i = 0; i < numRabbits; i++){
+		for(int i = 0; i < numInitRabbits; i++){
 			addNewRabbit();
 		}
 
@@ -266,12 +266,12 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		return schedule;
 	}
 
-	public int getNumRabbits() {
-		return numRabbits;
+	public int getNumInitRabbits() {
+		return numInitRabbits;
 	}
 
-	public void setNumRabbits(int nr) {
-		numRabbits = nr;
+	public void setNumInitRabbits(int nr) {
+		numInitRabbits = nr;
 	}
 
 	public int getGridSize() {
@@ -282,12 +282,12 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		gridSize = gs;
 	}
 
-	public int getGrass() {
-		return grass;
+	public int getNumInitGrass() {
+		return numInitGrass;
 	}
 
-	public void setGrass(int i) {
-		grass = i;
+	public void setNumInitGrass(int i) {
+		numInitGrass = i;
 	}
 
 }
