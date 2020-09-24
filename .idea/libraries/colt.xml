@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="colt">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/colt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/commons-math-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/jdom.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/jsolver.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/log4j-1.2.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/logist.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/plot.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rabbits/lib/repast.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
