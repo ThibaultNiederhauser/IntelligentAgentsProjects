@@ -20,7 +20,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7abe2e15-57f9-4890-a1b0-ab8e0e4a1eb7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/IntelligentAgentsProjects.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbits/lastname1-lastname2-in/src/lastname1-lastname2-in.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbits/lib/lib.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/libraries/colt.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/libraries/commons_math_1_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/libraries/jdom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/libraries/jsolver.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/libraries/log4j_1_2_15.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/libraries/logist.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/libraries/plot.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/lastname1-lastname2-in/src/RabbitsGrassSimulationAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/lastname1-lastname2-in/src/RabbitsGrassSimulationAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationAgent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassStep.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassStep.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateAgentEnergy.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateAgentEnergy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$agentEnergy.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$agentEnergy.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$grassInSpace.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel$grassInSpace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbits/out/production/rabbits/RabbitsGrassSimulationModel.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +70,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="jdk.selected.JAVA_MODULE" value="openjdk-15" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/rabbits" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/rabbits/lib" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="configurable.group.build" />
@@ -59,7 +86,8 @@
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-15" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="MainRabbit" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/" />
+      <module name="IntelligentAgentsProjects" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/rabbits" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -134,10 +162,10 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="121" y="0" key="#Project_Structure/0.0.1280.680@0.0.1280.680" timestamp="1600519337985" />
-    <state x="32" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600520170843">
+    <state x="32" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601025094983">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="32" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1600520170843" />
+    <state x="32" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1601025094983" />
     <state x="371" y="130" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1600520105824">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
@@ -146,34 +174,34 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="471" y="51" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1280.680@0.0.1280.680" timestamp="1600519308827" />
-    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1600520356131">
+    <state x="421" y="95" key="FileChooserDialogImpl" timestamp="1601025019160">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1600520356131" />
-    <state width="1237" height="126" key="GridCell.Tab.0.bottom" timestamp="1600519432110">
+    <state x="421" y="95" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1601025019160" />
+    <state width="1237" height="293" key="GridCell.Tab.0.bottom" timestamp="1601025099236">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="126" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1600519432110" />
-    <state width="1237" height="126" key="GridCell.Tab.0.center" timestamp="1600519432110">
+    <state width="1237" height="293" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601025099236" />
+    <state width="1237" height="293" key="GridCell.Tab.0.center" timestamp="1601025099235">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="126" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1600519432110" />
-    <state width="1237" height="126" key="GridCell.Tab.0.left" timestamp="1600519432110">
+    <state width="1237" height="293" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1601025099235" />
+    <state width="1237" height="293" key="GridCell.Tab.0.left" timestamp="1601025099235">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="126" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1600519432110" />
-    <state width="1237" height="126" key="GridCell.Tab.0.right" timestamp="1600519432110">
+    <state width="1237" height="293" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1601025099235" />
+    <state width="1237" height="293" key="GridCell.Tab.0.right" timestamp="1601025099236">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="126" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1600519432110" />
+    <state width="1237" height="293" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1601025099236" />
     <state x="336" y="45" width="863" height="590" key="NewModule_or_Project.wizard" timestamp="1600520347803">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="336" y="45" width="863" height="590" key="NewModule_or_Project.wizard/0.0.1280.680@0.0.1280.680" timestamp="1600520347803" />
-    <state x="142" y="0" key="SettingsEditor" timestamp="1600520348559">
+    <state x="142" y="0" key="SettingsEditor" timestamp="1601025027159">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1600520348559" />
+    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1601025027159" />
     <state x="112" y="0" key="new project wizard" timestamp="1600520300360">
       <screen x="0" y="0" width="1280" height="680" />
     </state>

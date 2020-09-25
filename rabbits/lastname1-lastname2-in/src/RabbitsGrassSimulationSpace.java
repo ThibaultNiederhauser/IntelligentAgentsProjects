@@ -66,8 +66,6 @@ public class RabbitsGrassSimulationSpace {
         return retVal;
     }
 
-
-
     public boolean addAgent(RabbitsGrassSimulationAgent agent){
         boolean retVal = false;
         int count = 0;
@@ -120,5 +118,6 @@ public class RabbitsGrassSimulationSpace {
         }
         return totalGrass;
     }
+
 
 }
