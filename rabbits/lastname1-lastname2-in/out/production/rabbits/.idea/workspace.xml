@@ -20,37 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71146135-62d9-4399-9d78-1968adb71b98" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/IntelligentAgentsProjects.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../.idea/libraries/lib.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/rabbits.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/colt.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_math_1_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/commons_math_1_1.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jdom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jsolver.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/log4j_1_2_15.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/logist.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/plot.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/repast.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationAgent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationSpace.java" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationSpace.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/MainRabbit.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationAgent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassStep.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateAgentEnergy.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$agentEnergy.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$grassInSpace.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationSpace.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,22 +122,22 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="348" y="82" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1601025748230" />
-    <state width="1237" height="2" key="GridCell.Tab.0.bottom" timestamp="1601050336367">
+    <state width="1237" height="2" key="GridCell.Tab.0.bottom" timestamp="1601051238131">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601050336367" />
-    <state width="1237" height="2" key="GridCell.Tab.0.center" timestamp="1601050336366">
+    <state width="1237" height="2" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601051238131" />
+    <state width="1237" height="2" key="GridCell.Tab.0.center" timestamp="1601051238130">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1601050336366" />
-    <state width="1237" height="2" key="GridCell.Tab.0.left" timestamp="1601050336366">
+    <state width="1237" height="2" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1601051238130" />
+    <state width="1237" height="2" key="GridCell.Tab.0.left" timestamp="1601051238130">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1601050336366" />
-    <state width="1237" height="2" key="GridCell.Tab.0.right" timestamp="1601050336367">
+    <state width="1237" height="2" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1601051238130" />
+    <state width="1237" height="2" key="GridCell.Tab.0.right" timestamp="1601051238130">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1601050336367" />
+    <state width="1237" height="2" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1601051238130" />
     <state width="1237" height="204" key="GridCell.Tab.1.bottom" timestamp="1601026048710">
       <screen x="0" y="0" width="1280" height="680" />
     </state>

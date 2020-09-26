@@ -1,4 +1,6 @@
 import uchicago.src.sim.space.Object2DGrid;
+import java.util.Random;
+
 
 
 
@@ -80,6 +82,42 @@ public class RabbitsGrassSimulationSpace {
                 retVal = true;
                 agent.setRabbitGrassSpace(this);
             }
+            count++;
+        }
+
+        return retVal;
+    }
+
+    public boolean addAgent(int posX, int posY, RabbitsGrassSimulationAgent agent){
+        boolean retVal = false;
+        int count = 0;
+        int countLimit = 10;
+
+        while((retVal==false) && (count < countLimit)){
+            int dx = (int)Math.floor(Math.random() * 3) - 1;
+            int dy = 0;
+
+            if(dx == 0){
+                while(dy == 0){
+                    dy = (int)Math.floor(Math.random() * 3) - 1;
+                }
+            }
+
+            int x = (dx + posX) % agentSpace.getSizeX();
+            int y = (dy + posY) % agentSpace.getSizeY();
+
+            if(x < 0){
+                x = agentSpace.getSizeX()-1;}
+            if(y < 0){
+                y = agentSpace.getSizeY()-1;}
+
+
+            if(isCellOccupied(x,y) == false){
+                agentSpace.putObjectAt(x,y,agent);
+                agent.setXY(x,y);
+                retVal = true;
+            }
+            agent.setRabbitGrassSpace(this);
             count++;
         }
 

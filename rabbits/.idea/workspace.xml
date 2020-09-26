@@ -20,37 +20,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71146135-62d9-4399-9d78-1968adb71b98" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/IntelligentAgentsProjects.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../.idea/libraries/lib.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/rabbits.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/colt.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_math_1_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/commons_math_1_1.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jdom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jsolver.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/log4j_1_2_15.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/logist.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/plot.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/repast.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationAgent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationSpace.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationSpace.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationAgent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationSpace.java" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationSpace.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/MainRabbit.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationAgent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassStep.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateAgentEnergy.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$agentEnergy.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel$grassInSpace.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationModel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rabbits/RabbitsGrassSimulationSpace.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,38 +132,38 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="348" y="82" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1601025748230" />
-    <state width="1237" height="2" key="GridCell.Tab.0.bottom" timestamp="1601051003897">
+    <state width="1237" height="144" key="GridCell.Tab.0.bottom" timestamp="1601130214309">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601051003897" />
-    <state width="1237" height="2" key="GridCell.Tab.0.center" timestamp="1601051003896">
+    <state width="1237" height="144" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601130214309" />
+    <state width="1237" height="144" key="GridCell.Tab.0.center" timestamp="1601130214309">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1601051003896" />
-    <state width="1237" height="2" key="GridCell.Tab.0.left" timestamp="1601051003896">
+    <state width="1237" height="144" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1601130214309" />
+    <state width="1237" height="144" key="GridCell.Tab.0.left" timestamp="1601130214309">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1601051003896" />
-    <state width="1237" height="2" key="GridCell.Tab.0.right" timestamp="1601051003896">
+    <state width="1237" height="144" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1601130214309" />
+    <state width="1237" height="144" key="GridCell.Tab.0.right" timestamp="1601130214309">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="2" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1601051003896" />
-    <state width="1237" height="204" key="GridCell.Tab.1.bottom" timestamp="1601026048710">
+    <state width="1237" height="144" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1601130214309" />
+    <state width="1237" height="204" key="GridCell.Tab.1.bottom" timestamp="1601114349250">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="204" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601026048710" />
-    <state width="1237" height="204" key="GridCell.Tab.1.center" timestamp="1601026048710">
+    <state width="1237" height="204" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601114349250" />
+    <state width="1237" height="204" key="GridCell.Tab.1.center" timestamp="1601114349250">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="204" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1601026048710" />
-    <state width="1237" height="204" key="GridCell.Tab.1.left" timestamp="1601026048710">
+    <state width="1237" height="204" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1601114349250" />
+    <state width="1237" height="204" key="GridCell.Tab.1.left" timestamp="1601114349250">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="204" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1601026048710" />
-    <state width="1237" height="204" key="GridCell.Tab.1.right" timestamp="1601026048710">
+    <state width="1237" height="204" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1601114349250" />
+    <state width="1237" height="204" key="GridCell.Tab.1.right" timestamp="1601114349250">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="204" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1601026048710" />
+    <state width="1237" height="204" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1601114349250" />
     <state x="315" y="45" width="863" height="590" key="NewModule_or_Project.wizard" timestamp="1601024755632">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
@@ -192,10 +172,24 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="121" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1601025891563" />
+    <state x="189" y="52" width="902" height="628" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1601115012424">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="189" y="52" width="902" height="628" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1280.680@0.0.1280.680" timestamp="1601115012424" />
     <state x="91" y="0" key="new project wizard" timestamp="1601024457731">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state x="91" y="0" key="new project wizard/0.0.1280.680@0.0.1280.680" timestamp="1601024457731" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/rabbits$MainRabbit.ic" NAME="MainRabbit Coverage Results" MODIFIED="1601026025823" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
