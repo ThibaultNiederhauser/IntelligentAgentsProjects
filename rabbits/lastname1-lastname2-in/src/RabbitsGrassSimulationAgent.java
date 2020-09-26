@@ -100,7 +100,7 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		return y;
 	}
 
-	public void step() {
+	public void step(int stepEnergy) {
 		setVxVy();
 
 		int newX = x + vX;
@@ -112,7 +112,7 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 
 		int count = 0;
 
-		energy -= 1;
+		energy -= stepEnergy;
 		while (!tryMove(newX, newY) && count++ < 10) {
 			setVxVy();
 		}

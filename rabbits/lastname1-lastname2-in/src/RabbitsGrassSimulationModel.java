@@ -32,9 +32,10 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	private static final int GRIDSIZE = 20;
 	private static final int NUMINITGRASS = 100;
 	private static final int ENERGYINIT = 100;
-	private static final int GRASSGROWTHRATE = 10;
+	private static final int GRASSGROWTHRATE = 50;
 	private static final int BIRTHTHRESHOLD = 150;
-	private static final int REPRODUCTIONENERGY = 1;
+	private static final int REPRODUCTIONENERGY = 50;
+	private static final int STEPENERGY = 1;
 
 
 	private int numInitRabbits = NUMINITRABBITS;
@@ -42,6 +43,8 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	private int numInitGrass = NUMINITGRASS;
 	private int grassGrowthRate = GRASSGROWTHRATE;
 	private int birthThreshold = BIRTHTHRESHOLD;
+	private int reproductionEnergy = REPRODUCTIONENERGY;
+	private int stepEnergy = STEPENERGY;
 
 	private Schedule schedule;
 	private RabbitsGrassSimulationSpace rgsSpace;
@@ -118,7 +121,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		//Register Displays
 		registerDisplaySurface("Rabbit Grass Model Window 1", displaySurf);
 		this.registerMediaProducer("Plot", amountOfGrassInSpace);
-		this.registerMediaProducer("PLot", numLivingAgents);
+		this.registerMediaProducer("Plot", numLivingAgents);
 
 	}
 
@@ -157,7 +160,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 				SimUtilities.shuffle(agentList);
 				for(int i =0; i < agentList.size(); i++){
 					RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
-					rga.step();
+					rga.step(stepEnergy);
 				}
 				int deadAgents = reapDeadAgents();
 				displaySurf.updateDisplay();
@@ -226,7 +229,8 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		// TODO Auto-generated method stub
 		// Parameters to be set by users via the Repast UI slider bar
 		// Do "not" modify the parameters names provided in the skeleton code, you can add more if you want
-		String[] params = {"GridSize", "NumInitRabbits", "NumInitGrass", "GrassGrowthRate", "BirthThreshold"};
+		String[] params = {"GridSize", "NumInitRabbits", "NumInitGrass", "GrassGrowthRate", "BirthThreshold",
+				"ReproductionEnergy", "StepEnergy"};
 		return params;
 	}
 
@@ -283,7 +287,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			if(rga.getEnergy() >= thres){
 				boolean val = giveBirth(rga.getX(), rga.getY());
 				if(val){
-					rga.setEnergy(rga.getEnergy()-REPRODUCTIONENERGY);
+					rga.setEnergy(rga.getEnergy()-reproductionEnergy);
 				}
 				System.out.println("size " + agentList.size());
 
@@ -334,6 +338,22 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 	public void setBirthThreshold(int t) {
 		birthThreshold = t;
+	}
+
+	public int getReproductionEnergy() {
+		return reproductionEnergy;
+	}
+
+	public void setReproductionEnergy(int re) {
+		reproductionEnergy = re;
+	}
+
+	public int getStepEnergy() {
+		return stepEnergy;
+	}
+
+	public void setStepEnergy(int re) {
+		stepEnergy = re;
 	}
 
 }
