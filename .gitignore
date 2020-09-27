@@ -6,3 +6,7 @@ rabbits/out/
 repast.log
 
 rabbits/target/
+
+rabbits/.DS_Store
+
+.DS_Store
