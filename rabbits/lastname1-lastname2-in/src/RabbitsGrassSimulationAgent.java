@@ -71,6 +71,10 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		return energy;
 	}
 
+	public void setEnergy(int e){
+		energy = e;
+	}
+
 	public void report(){
 		System.out.println(getID() +
 				" at " +
@@ -80,13 +84,12 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 	}
 
 
-
-
 	public void draw(SimGraphics G) {
-		if(energy > 100)
-			G.drawFastRoundRect(Color.green);
+		if(energy > 10)
+			G.drawFastRoundRect(Color.red);
 		else
 			G.drawFastRoundRect(Color.blue);
+
 	}
 
 	public int getX() {
@@ -97,7 +100,7 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		return y;
 	}
 
-	public void step() {
+	public void step(int stepEnergy) {
 		setVxVy();
 
 		int newX = x + vX;
@@ -109,15 +112,19 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 
 		int count = 0;
 
-		energy -= 1;
+		energy -= stepEnergy;
 		while (!tryMove(newX, newY) && count++ < 10) {
 			setVxVy();
 		}
 		energy += rgSpace.eatGrassAt(x, y);
 	}
 
+
+
 	private boolean tryMove(int newX, int newY){
 		return rgSpace.moveAgentAt(x, y, newX, newY);
 	}
+
+
 
 }
