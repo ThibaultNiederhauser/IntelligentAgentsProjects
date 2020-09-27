@@ -1,5 +1,10 @@
 import java.awt.Color;
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import uchicago.src.sim.analysis.DataSource;
 import uchicago.src.sim.analysis.Sequence;
@@ -13,6 +18,8 @@ import uchicago.src.sim.gui.Value2DDisplay;
 import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.util.SimUtilities;
 import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.reflector.RangePropertyDescriptor;
+
 
 
 /**
@@ -28,13 +35,12 @@ import uchicago.src.sim.analysis.OpenSequenceGraph;
 public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 	//Default Values
-	private static final int NUMINITRABBITS = 2;
+	private static final int NUMINITRABBITS = 100;
 	private static final int GRIDSIZE = 20;
 	private static final int NUMINITGRASS = 100;
-	private static final int ENERGYINIT = 100;
-	private static final int GRASSGROWTHRATE = 50;
-	private static final int BIRTHTHRESHOLD = 150;
-	private static final int REPRODUCTIONENERGY = 50;
+	private static final int GRASSGROWTHRATE = 100;
+	private static final int BIRTHTHRESHOLD = 150;     // food to give birth
+	private static final int BIRTHENERGY = 50;
 	private static final int STEPENERGY = 1;
 
 
@@ -43,13 +49,13 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	private int numInitGrass = NUMINITGRASS;
 	private int grassGrowthRate = GRASSGROWTHRATE;
 	private int birthThreshold = BIRTHTHRESHOLD;
-	private int reproductionEnergy = REPRODUCTIONENERGY;
+	private int birthEnergy = BIRTHENERGY;
 	private int stepEnergy = STEPENERGY;
 
 	private Schedule schedule;
 	private RabbitsGrassSimulationSpace rgsSpace;
 	private DisplaySurface displaySurf;
-	private ArrayList agentList;
+	private ArrayList<RabbitsGrassSimulationAgent> agentList;
 	private OpenSequenceGraph amountOfGrassInSpace;
 	private OpenSequenceGraph numLivingAgents;
 
@@ -87,12 +93,22 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		else
 			init.loadModel(model, args[0], Boolean.parseBoolean(args[1]));
 
+
+		// Load rabbit graphical image
+		BufferedImage rabbitImg;
+		try {
+			rabbitImg = ImageIO.read(new File("../img/rabbit.png"));
+		} catch (IOException e) {
+			rabbitImg = null;
+			System.out.println("No icon found");
+		}
+		RabbitsGrassSimulationAgent.setRabbitIcon(rabbitImg);
 	}
 
 	public void setup() {
 		System.out.println("Running setup");
 		rgsSpace = null;
-		agentList = new ArrayList();
+		agentList = new ArrayList<>();
 		schedule = new Schedule(1);
 
 		// Tear down Displays
@@ -111,6 +127,15 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 		numLivingAgents = null;
 
+		// sliders
+
+		addRangePropertyDescriptor("GridSize", 0, 60, 20);
+		addRangePropertyDescriptor("NumInitRabbits", 0, 500, 100);
+		addRangePropertyDescriptor("NumInitGrass", 0, 500, 100);
+		addRangePropertyDescriptor("BirthThreshold", 0, 500, 100);
+		addRangePropertyDescriptor("GrassGrowthRate", 0, 200, 100);
+		addRangePropertyDescriptor("BirthEnergy", 0, 100, 50);
+		addRangePropertyDescriptor("StepEnergy", 0, 2, 1);
 
 		//Create Displays
 		displaySurf = new DisplaySurface(this, "Rabbit Grass Model Window 1");
@@ -229,8 +254,8 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		// TODO Auto-generated method stub
 		// Parameters to be set by users via the Repast UI slider bar
 		// Do "not" modify the parameters names provided in the skeleton code, you can add more if you want
-		String[] params = {"GridSize", "NumInitRabbits", "NumInitGrass", "GrassGrowthRate", "BirthThreshold",
-				"ReproductionEnergy", "StepEnergy"};
+		String[] params = {"GridSize", "NumInitRabbits", "NumInitGrass", "GrassGrowthRate",
+				"BirthThreshold", "BirthEnergy", "StepEnergy"};
 		return params;
 	}
 
@@ -239,13 +264,13 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	}
 
 	private void addNewRabbit(){
-		RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(ENERGYINIT);
+		RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(birthEnergy);
 		boolean val = rgsSpace.addAgent(a);
 		if(val){agentList.add(a);}
 	}
 
 	private boolean giveBirth(int posX, int posY){
-		RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(ENERGYINIT);
+		RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(birthEnergy);
 		boolean val = rgsSpace.addAgent(posX, posY, a);
 		if(val){
 			agentList.add(a);
@@ -258,6 +283,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		int livingAgents = 0;
 		for(int i = 0; i < agentList.size(); i++){
 			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
+			System.out.println("Energy is: " + rga.getEnergy());
 			if(rga.getEnergy() > 0) livingAgents++;
 		}
 		System.out.println("Number of living agents is: " + livingAgents);
@@ -284,13 +310,13 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		for(int i =0; i < numagents; i++){
 			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
 
-			if(rga.getEnergy() >= thres){
+			if(rga.getEnergy() >= thres){  //&& rga.getFertility()){
 				boolean val = giveBirth(rga.getX(), rga.getY());
 				if(val){
-					rga.setEnergy(rga.getEnergy()-reproductionEnergy);
+					rga.setFertility(false);
+					rga.setEnergy(rga.getEnergy()-birthEnergy);
 				}
-				System.out.println("size " + agentList.size());
-
+				System.out.println(rga.getID() + "give birth\n");
 			}
 		}
 	}
@@ -340,12 +366,12 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		birthThreshold = t;
 	}
 
-	public int getReproductionEnergy() {
-		return reproductionEnergy;
+	public int getBirthEnergy() {
+		return birthEnergy;
 	}
 
-	public void setReproductionEnergy(int re) {
-		reproductionEnergy = re;
+	public void setBirthEnergy(int t) {
+		birthEnergy = t;
 	}
 
 	public int getStepEnergy() {
@@ -356,6 +382,10 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		stepEnergy = re;
 	}
 
+	public void addRangePropertyDescriptor(String s, int i, int i1, int i2) {
+		RangePropertyDescriptor d = new RangePropertyDescriptor(s, i, i1, i2);
+		descriptors.put(s, d);
+	}
 }
 
 

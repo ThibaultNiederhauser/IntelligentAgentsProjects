@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
@@ -20,9 +21,11 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 	private int vX;
 	private int vY;
 	private int energy;
+	private boolean fertility = true;
 	private static int IDNumber = 0;
 	private int ID;
 	private RabbitsGrassSimulationSpace rgSpace;
+	private static BufferedImage rabbitIcon;
 
 
 	public RabbitsGrassSimulationAgent(int energyInit){
@@ -77,19 +80,20 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 
 	public void report(){
 		System.out.println(getID() +
-				" at " +
-				x + ", " + y +
-				" has " +
-				getEnergy() + "energy");
+				" at (" +
+				x + "," + y +
+				") has " +
+				getEnergy() + " energy");
 	}
 
-
 	public void draw(SimGraphics G) {
-		if(energy > 10)
-			G.drawFastRoundRect(Color.red);
-		else
-			G.drawFastRoundRect(Color.blue);
-
+		if (energy > 0) {
+			if (rabbitIcon != null) {
+				G.drawImageToFit(rabbitIcon);
+			} else {
+				G.drawFastRoundRect(Color.blue);
+			}
+		}
 	}
 
 	public int getX() {
@@ -125,6 +129,15 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		return rgSpace.moveAgentAt(x, y, newX, newY);
 	}
 
+	public static void setRabbitIcon(BufferedImage icon) {
+		rabbitIcon = icon;
+	}
 
+	public void setFertility(boolean val){
+		fertility = val;
+	}
 
+	public boolean getFertility(){
+		return fertility;
+	}
 }
