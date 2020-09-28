@@ -21,7 +21,7 @@ public class RabbitsGrassSimulationSpace {
 
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j < gridSize; j++){
-                grassSpace.putObjectAt(i,j,new Integer(0));
+                grassSpace.putObjectAt(i,j, 0);
             }
         }
     }
@@ -36,15 +36,25 @@ public class RabbitsGrassSimulationSpace {
 
             // Get the value of the object at those coordinates
             int currentValue = getGrassAt(x, y);
+            int counter = 0;
+
+            while (currentValue >= 50 && counter < 10){
+                x = (int)(Math.random()*(grassSpace.getSizeX()));
+                y = (int)(Math.random()*(grassSpace.getSizeY()));
+                currentValue = getGrassAt(x, y);
+                counter++;
+            }
+
             // Replace the Integer object with another one with the new value
-            grassSpace.putObjectAt(x,y,new Integer(currentValue + 1));
+            if (currentValue < 50)
+                grassSpace.putObjectAt(x,y, currentValue + 1);
         }
     }
 
     public int getGrassAt(int x, int y){
         int i;
         if(grassSpace.getObjectAt(x,y)!= null){
-            i = ((Integer)grassSpace.getObjectAt(x,y)).intValue();
+            i = (Integer) grassSpace.getObjectAt(x, y);
         }
         else{
             i = 0;
@@ -73,10 +83,10 @@ public class RabbitsGrassSimulationSpace {
         int count = 0;
         int countLimit = 10 * agentSpace.getSizeX() * agentSpace.getSizeY();
 
-        while((retVal==false) && (count < countLimit)){
+        while((!retVal) && (count < countLimit)){
             int x = (int)(Math.random()*(agentSpace.getSizeX()));
             int y = (int)(Math.random()*(agentSpace.getSizeY()));
-            if(isCellOccupied(x,y) == false){
+            if(!isCellOccupied(x, y)){
                 agentSpace.putObjectAt(x,y,agent);
                 agent.setXY(x,y);
                 retVal = true;

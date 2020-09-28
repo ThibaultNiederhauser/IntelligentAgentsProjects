@@ -97,7 +97,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		// Load rabbit graphical image
 		BufferedImage rabbitImg;
 		try {
-			rabbitImg = ImageIO.read(new File("../img/rabbit.png"));
+			rabbitImg = ImageIO.read(new File("img/rabbit.png"));
 		} catch (IOException e) {
 			rabbitImg = null;
 			System.out.println("No icon found");
