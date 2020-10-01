@@ -10,3 +10,7 @@ rabbits/target/
 rabbits/.DS_Store
 
 .DS_Store
+
+out/production/
+
+rabbits/lastname1-lastname2-in/out/
