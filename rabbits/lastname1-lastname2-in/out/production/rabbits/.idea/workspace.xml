@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="rabbits:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="71146135-62d9-4399-9d78-1968adb71b98" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/lastname1-lastname2-in/img/dino.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/lastname1-lastname2-in/img/rabbit.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationAgent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1CarryDropCountLiving.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassGrowthGrass.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassReproduce.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassReproduce.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassStep.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassStep.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$1RabbitGrassUpdateGrassInSpace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$grassInSpace.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$grassInSpace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$livingAgents.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel$livingAgents.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationModel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationSpace.class" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/out/production/rabbits/RabbitsGrassSimulationSpace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/lastname1-lastname2-in/src/RabbitsGrassSimulationModel.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1hjN5YsZ78DTeujykUuxPzqcV2X" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/repast.jar" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+  </component>
+  <component name="RunManager" selected="Application.MainRabbit">
+    <configuration name="MainRabbit" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.jdks/openjdk-15" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+      <option name="MAIN_CLASS_NAME" value="MainRabbit" />
+      <module name="rabbits" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RabbitsGrassSimulationModel" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="RabbitsGrassSimulationModel" />
+      <module name="rabbits" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.MainRabbit" />
+      <item itemvalue="Application.RabbitsGrassSimulationModel" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.MainRabbit" />
+        <item itemvalue="Application.RabbitsGrassSimulationModel" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="71146135-62d9-4399-9d78-1968adb71b98" name="Default Changelist" comment="" />
+      <created>1600520358157</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1600520358157</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="121" y="0" key="#Project_Structure" timestamp="1601302477670">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="121" y="0" key="#Project_Structure/0.0.1280.680@0.0.1280.680" timestamp="1601302477670" />
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1601302455268">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="96" y="0" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1280.680@0.0.1280.680" timestamp="1601302455268" />
+    <state x="371" y="130" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1601297919366">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="371" y="130" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1280.680@0.0.1280.680" timestamp="1601297919366" />
+    <state x="471" y="51" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1601025413831">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="471" y="51" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1280.680@0.0.1280.680" timestamp="1601025413831" />
+    <state x="438" y="226" key="DetectedRootsChooserDialog" timestamp="1601024404531">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="438" y="226" key="DetectedRootsChooserDialog/0.0.1280.680@0.0.1280.680" timestamp="1601024404531" />
+    <state x="348" y="82" key="FileChooserDialogImpl" timestamp="1601302476546">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="348" y="82" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1601302476546" />
+    <state width="1237" height="144" key="GridCell.Tab.0.bottom" timestamp="1601302675535">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="144" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601302675535" />
+    <state width="1237" height="144" key="GridCell.Tab.0.center" timestamp="1601302675535">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="144" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1601302675535" />
+    <state width="1237" height="144" key="GridCell.Tab.0.left" timestamp="1601302675535">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="144" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1601302675535" />
+    <state width="1237" height="144" key="GridCell.Tab.0.right" timestamp="1601302675535">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="144" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1601302675535" />
+    <state width="1237" height="204" key="GridCell.Tab.1.bottom" timestamp="1601281815035">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="204" key="GridCell.Tab.1.bottom/0.0.1280.680@0.0.1280.680" timestamp="1601281815035" />
+    <state width="1237" height="204" key="GridCell.Tab.1.center" timestamp="1601281815035">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="204" key="GridCell.Tab.1.center/0.0.1280.680@0.0.1280.680" timestamp="1601281815035" />
+    <state width="1237" height="204" key="GridCell.Tab.1.left" timestamp="1601281815034">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="204" key="GridCell.Tab.1.left/0.0.1280.680@0.0.1280.680" timestamp="1601281815034" />
+    <state width="1237" height="204" key="GridCell.Tab.1.right" timestamp="1601281815035">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="204" key="GridCell.Tab.1.right/0.0.1280.680@0.0.1280.680" timestamp="1601281815035" />
+    <state x="315" y="45" width="863" height="590" key="NewModule_or_Project.wizard" timestamp="1601024755632">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="315" y="45" width="863" height="590" key="NewModule_or_Project.wizard/0.0.1280.680@0.0.1280.680" timestamp="1601024755632" />
+    <state x="121" y="0" key="SettingsEditor" timestamp="1601302499145">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="121" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1601302499145" />
+    <state x="189" y="52" width="902" height="628" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1601115012424">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="189" y="52" width="902" height="628" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1280.680@0.0.1280.680" timestamp="1601115012424" />
+    <state x="91" y="0" key="new project wizard" timestamp="1601024457731">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="91" y="0" key="new project wizard/0.0.1280.680@0.0.1280.680" timestamp="1601024457731" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/rabbits$MainRabbit.ic" NAME="MainRabbit Coverage Results" MODIFIED="1601302517762" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>
