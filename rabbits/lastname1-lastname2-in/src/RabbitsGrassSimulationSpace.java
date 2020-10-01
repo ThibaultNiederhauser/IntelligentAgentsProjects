@@ -9,6 +9,8 @@ import java.util.Random;
  * @author 
  */
 
+import uchicago.src.sim.space.Object2DGrid;
+
 public class RabbitsGrassSimulationSpace {
     private Object2DGrid grassSpace;
     private Object2DGrid agentSpace;

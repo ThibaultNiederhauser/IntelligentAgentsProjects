@@ -28,7 +28,7 @@ import uchicago.src.reflector.RangePropertyDescriptor;
  * order to run Repast simulation. It manages the entire RePast
  * environment and the simulation.
  *
- * @author 
+ * @author Sfera e basta
  */
 
 
