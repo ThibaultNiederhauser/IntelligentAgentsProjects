@@ -106,7 +106,6 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	}
 
 	public void setup() {
-		System.out.println("Running setup");
 		rgsSpace = null;
 		agentList = new ArrayList<>();
 		schedule = new Schedule(1);
@@ -269,9 +268,9 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		if(val){agentList.add(a);}
 	}
 
-	private boolean giveBirth(int posX, int posY){
+	private boolean giveBirth(){
 		RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(birthEnergy);
-		boolean val = rgsSpace.addAgent(posX, posY, a);
+		boolean val = rgsSpace.addAgent(a);
 		if(val){
 			agentList.add(a);
 		}
@@ -311,7 +310,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentList.get(i);
 
 			if(rga.getEnergy() >= thres){  //&& rga.getFertility()){
-				boolean val = giveBirth(rga.getX(), rga.getY());
+				boolean val = giveBirth();
 				if(val){
 					rga.setFertility(false);
 					rga.setEnergy(rga.getEnergy()-birthEnergy);
