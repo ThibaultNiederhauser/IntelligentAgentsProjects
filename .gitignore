@@ -14,3 +14,5 @@ rabbits/.DS_Store
 out/production/
 
 rabbits/lastname1-lastname2-in/out/
+
+workspace/bin/
