@@ -6,7 +6,14 @@
 	<!-- #### REACTIVE AGENTS ### -->
 	<agent name="reactive-random">
 		<set class-path="bin/"/>
-		<set class-name="ReactiveTemplate"/>
+		<set class-name="RandomAgent"/>
+		<set discount-factor=".85"/>
+	</agent>
+
+	<!-- #### REACTIVE AGENTS ### -->
+	<agent name="reactive">
+		<set class-path="bin/"/>
+		<set class-name="ReactiveAgent"/>
 		<set discount-factor=".85"/>
 	</agent>
 	

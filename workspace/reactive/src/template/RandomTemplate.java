@@ -1,3 +1,5 @@
+package template;
+
 import logist.agent.Agent;
 import logist.behavior.ReactiveBehavior;
 import logist.plan.Action;

@@ -1,8 +1,10 @@
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 import java.util.*;
+
 
 import logist.simulation.Vehicle;
 import logist.agent.Agent;
@@ -15,7 +17,7 @@ import logist.task.TaskDistribution;
 import logist.topology.Topology;
 import logist.topology.Topology.City;
 
-public class ReactiveTemplate implements ReactiveBehavior {
+public class ReactiveAgent implements ReactiveBehavior {
 
 	private static final int LEAVE = 0;
 	private static final int TAKE = 1;
