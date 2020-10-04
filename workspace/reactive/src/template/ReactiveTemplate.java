@@ -28,6 +28,8 @@ public class ReactiveTemplate implements ReactiveBehavior {
 	private HashMap<State, Double> v_values = new HashMap<State, Double>();
 	private HashMap<State, double[]> q_values = new HashMap<State, double[]>();
 
+	double task_taken = 0;
+	double task_not_taken = 0;
 
 	@Override
 	public void setup(Topology topology, TaskDistribution td, Agent agent) {
@@ -47,38 +49,52 @@ public class ReactiveTemplate implements ReactiveBehavior {
 
 		this.numActions = 0;
 		this.myAgent = agent;
-
 		init_vals(topology);
 
 		// training
 		boolean done = false;
 		int iter_count = 0;
+		float km_cost = agent.vehicles().get(0).costPerKm();
 
 		while (!done){
 			done = true;
 			System.out.println("Iter_count: " + iter_count++);
-			// TODO: add km cost
 			for (State from : statesList) {  // for all cities
 				for (int act : actions) {   // action of leave and action of take
 					double q = 0;
+					City currentCity = from.getCity();
+
 					if (act == LEAVE) {
-						for (City to : tasks) {    // for all the cities
-							if (to == null || to.equals(from.getCity()))	continue;
-							q += discount*td.probability(from.getCity(),to)*v_values.get(city2State(to))/topology.size();  // TODO:  softmax here and oly for neighbors
+						double max_val = 0;
+						for(City neighbor : currentCity.neighbors()){
+							// mean neighbors policy
+							// q += discount*v_values.get(city2State(neighbor))/(currentCity.neighbors().size());
+							// max policy
+							double val = v_values.get(city2State(neighbor));
+							double cost =  neighbor.distanceTo(currentCity)*km_cost;
+
+							if ( discount*val - cost > max_val)
+								max_val = discount*val - cost;
+							// TODO: soft max policy
 						}
+						q += max_val;
 					} else {
 						for (City to : tasks) {  // for all the cities
 							if (to == null || to.equals(from.getCity()))	continue;
-							q += td.probability(from.getCity(),to)*(td.reward(from.getCity(), to) +
-									discount*v_values.get(city2State(to)))
-									/topology.size();
+							q += td.probability(from.getCity(),to)
+									*(td.reward(from.getCity(), to) - to.distanceTo(currentCity)*km_cost
+									+ discount*v_values.get(city2State(to)));
+							// topology size is wrong
 						}
 					}
 					update_q_value(from, act, q);
-					Double r = update_v_value(from);
-					if (r < tol){
-						done = false;
 					}
+
+				// was above but better here
+				Double r = update_v_value(from);
+				if (r < tol){
+					done = false;
+
 				}
 			}
 		}
@@ -88,7 +104,7 @@ public class ReactiveTemplate implements ReactiveBehavior {
 	public Action act(Vehicle vehicle, Task availableTask) {
 		Action action;
 
-		Double discount = 0.95;
+		Double discount = (double)1;
 
 		if (availableTask == null) {
 			City currentCity = vehicle.getCurrentCity();
@@ -100,20 +116,27 @@ public class ReactiveTemplate implements ReactiveBehavior {
 			City to_not = get_best_neighbors(currentCity, vehicle.costPerKm());
 
 			double valPickup = availableTask.reward
-					- currentCity.distanceTo(to_yes)*vehicle.costPerKm()
+					// - currentCity.distanceTo(to_yes)*vehicle.costPerKm()
 					+ discount*v_values.get(city2State(to_yes));
-			double valDont = discount*v_values.get(city2State(to_not))
-					- currentCity.distanceTo(to_not)*vehicle.costPerKm();
 
-			if (valPickup > valDont)
+			double valDont = discount*v_values.get(city2State(to_not));
+					// - currentCity.distanceTo(to_not)*vehicle.costPerKm();
+
+			if (valPickup > valDont){
 				action = new Pickup(availableTask);
+				task_taken++;
+			}
 			else{
 				action = new Move(to_not);
+				task_not_taken++;
 			}
 		}
 		
 		if (numActions >= 1) {
 			System.out.println("The total profit after "+numActions+" actions is "+myAgent.getTotalProfit()+" (average profit: "+(myAgent.getTotalProfit() / (double)numActions)+")");
+			double tot = task_taken+task_not_taken;
+			double r = task_taken/tot;
+			System.out.println("Ratio task taken: " + r + " Total tasks: " + tot);
 		}
 		numActions++;
 		
@@ -153,7 +176,7 @@ public class ReactiveTemplate implements ReactiveBehavior {
 		double best = 0;
 		City best_city = null;
 		for (City neigh : currentCity.neighbors()){
-			double v = v_values.get(city2State(neigh)) - neigh.distanceTo(currentCity)*cost;
+			double v = v_values.get(city2State(neigh)); //- neigh.distanceTo(currentCity)*cost;
 			if (v>best){
 				best = v;
 				best_city = neigh;
