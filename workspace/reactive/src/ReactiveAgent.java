@@ -17,11 +17,13 @@ import logist.task.TaskDistribution;
 import logist.topology.Topology;
 import logist.topology.Topology.City;
 
+
 public class ReactiveAgent implements ReactiveBehavior {
 
 	private static final int LEAVE = 0;
 	private static final int TAKE = 1;
 	private static final double tol = 0.99;
+
 
 	private int numActions;
 	private Agent myAgent;
@@ -69,17 +71,19 @@ public class ReactiveAgent implements ReactiveBehavior {
 					if (act == LEAVE) {
 						double max_val = 0;
 						for(City neighbor : currentCity.neighbors()){
+
+							q += (discount*v_values.get(city2State(neighbor)) - neighbor.distanceTo(currentCity)*km_cost)/(currentCity.neighbors().size());
 							// mean neighbors policy
 							// q += discount*v_values.get(city2State(neighbor))/(currentCity.neighbors().size());
 							// max policy
-							double val = v_values.get(city2State(neighbor));
+							/**double val = v_values.get(city2State(neighbor));
 							double cost =  neighbor.distanceTo(currentCity)*km_cost;
 
 							if ( discount*val - cost > max_val)
-								max_val = discount*val - cost;
+								max_val = discount*val - cost;**/
 							// TODO: soft max policy
 						}
-						q += max_val;
+						//q += max_val;
 					} else {
 						for (City to : tasks) {  // for all the cities
 							if (to == null || to.equals(from.getCity()))	continue;
@@ -127,6 +131,7 @@ public class ReactiveAgent implements ReactiveBehavior {
 			if (valPickup > valDont){
 				action = new Pickup(availableTask);
 				task_taken++;
+
 			}
 			else{
 				action = new Move(to_not);
@@ -135,6 +140,7 @@ public class ReactiveAgent implements ReactiveBehavior {
 		}
 		
 		if (numActions >= 1) {
+
 			System.out.println("The total profit after "+numActions+" actions is "+myAgent.getTotalProfit()+" (average profit: "+(myAgent.getTotalProfit() / (double)numActions)+")");
 			double tot = task_taken+task_not_taken;
 			double r = task_taken/tot;

@@ -11,10 +11,41 @@
 	</agent>
 
 	<!-- #### REACTIVE AGENTS ### -->
-	<agent name="reactive">
+	<agent name="reactive1">
+		<set class-path="bin/"/>
+		<set class-name="ReactiveAgent"/>
+		<set discount-factor=".1"/>
+	</agent>
+
+	<agent name="reactive2">
+		<set class-path="bin/"/>
+		<set class-name="ReactiveAgent"/>
+		<set discount-factor=".75"/>
+	</agent>
+
+	<agent name="reactive3">
 		<set class-path="bin/"/>
 		<set class-name="ReactiveAgent"/>
 		<set discount-factor=".85"/>
 	</agent>
-	
+
+	<agent name="reactive4">
+		<set class-path="bin/"/>
+		<set class-name="ReactiveAgent"/>
+		<set discount-factor=".95"/>
+	</agent>
+
+	<agent name="reactive5">
+		<set class-path="bin/"/>
+		<set class-name="ReactiveAgent"/>
+		<set discount-factor=".99"/>
+	</agent>
+
+	<agent name="reactive-dummy">
+		<set class-path="bin/"/>
+		<set class-name="DummyAgent"/>
+		<set discount-factor=".99"/>
+	</agent>
+
+
 </agents>

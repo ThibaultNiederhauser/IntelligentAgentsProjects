@@ -30,10 +30,10 @@
 	
 	<!-- the companies and vehicles in the simulation -->
 	<companies>
-	
-		<company name="Company A">
+
+		<company name="Company Z">
 			<!-- the first vehicle (blue) -->
-			<vehicle name="Vehicle 1">
+			<vehicle name="Reactive-random">
 				<set color="#0000ff" />
 				<set home="Amsterdam" />
 				<set speed="90" />
@@ -41,23 +41,34 @@
 				<set cost-per-km="5" />
 			</vehicle>
 		</company>
-		
-		<company name="Company B">
-			<!-- the second vehicle (red) -->
-			<vehicle name="Vehicle 2">
-				<set color="#ff0000" />
-				<set home="Eindhoven" />
+
+		<company name="Company A">
+			<!-- the first vehicle (blue) -->
+			<vehicle name="Reactive-dummy">
+				<set color="#0000ff" />
+				<set home="Amsterdam" />
 				<set speed="90" />
 				<set capacity="80" />
 				<set cost-per-km="5" />
 			</vehicle>
 		</company>
-				
+
+		<company name="Company B">
+			<!-- the second vehicle (red) -->
+			<vehicle name="Reactive 0.75">
+				<set color="#ff0000" />
+				<set home="Amsterdam" />
+				<set speed="90" />
+				<set capacity="80" />
+				<set cost-per-km="5" />
+			</vehicle>
+		</company>
+
 		<company name="Company C">
 			<!-- the third vehicle (green) -->
-			<vehicle name="Vehicle 3">
+			<vehicle name="Reactive 0.85">
 				<set color="#00ff00" />
-				<set home="Den Haag" />
+				<set home="Amsterdam" />
 				<set speed="90" />
 				<set capacity="80" />
 				<set cost-per-km="5" />
@@ -66,9 +77,9 @@
 		
 		<company name="Company D">
 			<!-- the fourth vehicle (yellow) -->
-			<vehicle name="Vehicle 4">
+			<vehicle name="Reactive 0.95">
 				<set color="#ffff00" />
-				<set home="Apeldoorn" />
+				<set home="Amsterdam" />
 				<set speed="90" />
 				<set capacity="80" />
 				<set cost-per-km="5" />
@@ -77,9 +88,9 @@
 		
 		<company name="Company E">
 			<!-- the fifth vehicle (magenta) -->
-			<vehicle name="Vehicle 5">
+			<vehicle name="Reactive 0.99">
 				<set color="#ff00ff" />
-				<set home="Utrecht" />
+				<set home="Amsterdam" />
 				<set speed="90" />
 				<set capacity="80" />
 				<set cost-per-km="5" />
