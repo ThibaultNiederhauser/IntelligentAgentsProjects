@@ -120,6 +120,15 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		energy -= stepEnergy;
 		while (!tryMove(newX, newY) && count++ < 10) {
 			setVxVy();
+
+			newX = x + vX;
+			newY = y + vY;
+
+			newX = (newX + grid.getSizeX()) % grid.getSizeX();
+			newY = (newY + grid.getSizeY()) % grid.getSizeY();
+
+
+
 		}
 		energy += rgSpace.eatGrassAt(x, y);
 	}

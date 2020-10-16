@@ -72,11 +72,12 @@ public class ReactiveAgent implements ReactiveBehavior {
 						double max_val = 0;
 						for(City neighbor : currentCity.neighbors()){
 
-							q += (discount*v_values.get(city2State(neighbor)) - neighbor.distanceTo(currentCity)*km_cost)/(currentCity.neighbors().size());
+							q += (discount*v_values.get(city2State(neighbor))
+									- neighbor.distanceTo(currentCity)*km_cost)/(currentCity.neighbors().size());
 							// mean neighbors policy
 							// q += discount*v_values.get(city2State(neighbor))/(currentCity.neighbors().size());
 							// max policy
-							/**double val = v_values.get(city2State(neighbor));
+				h			/**double val = v_values.get(city2State(neighbor));
 							double cost =  neighbor.distanceTo(currentCity)*km_cost;
 
 							if ( discount*val - cost > max_val)
@@ -131,7 +132,6 @@ public class ReactiveAgent implements ReactiveBehavior {
 			if (valPickup > valDont){
 				action = new Pickup(availableTask);
 				task_taken++;
-
 			}
 			else{
 				action = new Move(to_not);
