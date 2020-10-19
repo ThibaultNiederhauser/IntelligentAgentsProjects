@@ -77,7 +77,7 @@ public class ReactiveAgent implements ReactiveBehavior {
 							// mean neighbors policy
 							// q += discount*v_values.get(city2State(neighbor))/(currentCity.neighbors().size());
 							// max policy
-				h			/**double val = v_values.get(city2State(neighbor));
+							/**double val = v_values.get(city2State(neighbor));
 							double cost =  neighbor.distanceTo(currentCity)*km_cost;
 
 							if ( discount*val - cost > max_val)
