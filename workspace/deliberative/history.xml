@@ -5,11 +5,14 @@
 	<agents>
 		<agent name="deliberative-astar">
 			<vehicle name="Vehicle 1"/>
+<<<<<<< HEAD
 =======
 <history configuration="config\deliberative.xml">
 	<agents>
 		<agent name="deliberative-random">
 			<vehicle name="Vehicle 1"/>
+=======
+>>>>>>> master
 		</agent>
 	</agents>
 	<rounds>
@@ -23,6 +26,7 @@
 				<task id="5" pickup="Sion" delivery="Basel" weight="3" reward="46991"/>
 			</tasks>
 			<events>
+<<<<<<< HEAD
 				<event id="0" time="0" vehicle="Vehicle 1" move="Fribourg"/>
 				<event id="1" time="1111111111" vehicle="Vehicle 1" move="Bern"/>
 				<event id="2" time="1666666666" vehicle="Vehicle 1" move="Aarau"/>
@@ -77,10 +81,24 @@
 				<event id="51" time="43966666631" vehicle="Vehicle 1" move="Bern"/>
 				<event id="52" time="44411111074" vehicle="Vehicle 1" move="Basel"/>
 				<event id="53" time="45966666628" vehicle="Vehicle 1" deliver="5"/>
+=======
+				<event id="0" time="0" vehicle="Vehicle 1" pickup="4"/>
+				<event id="1" time="299999998" vehicle="Vehicle 1" move="Sion"/>
+				<event id="2" time="1966666609" vehicle="Vehicle 1" pickup="2"/>
+				<event id="3" time="2266666597" vehicle="Vehicle 1" pickup="5"/>
+				<event id="4" time="2566666586" vehicle="Vehicle 1" move="Thun"/>
+				<event id="5" time="3899999873" vehicle="Vehicle 1" move="Bern"/>
+				<event id="6" time="4344444307" vehicle="Vehicle 1" move="Basel"/>
+				<event id="7" time="5899999813" vehicle="Vehicle 1" pickup="3"/>
+				<event id="8" time="6199999805" vehicle="Vehicle 1" deliver="5"/>
+				<event id="9" time="6499999794" vehicle="Vehicle 1" move="Zürich"/>
+				<event id="10" time="7833333070" vehicle="Vehicle 1" move="St-Gallen"/>
+>>>>>>> master
 			</events>
 		</round>
 	</rounds>
 	<statistics>
+<<<<<<< HEAD
 		<stat rank="1" agent="deliberative-random">
 			<total-tasks value="6"/>
 			<total-distance value="3840.0"/>
@@ -91,3 +109,14 @@
 	</statistics>
 </history>
 >>>>>>> Stashed changes
+=======
+		<stat rank="1" agent="deliberative-astar">
+			<total-tasks value="6"/>
+			<total-distance value="690.0"/>
+			<total-cost value="3450"/>
+			<total-reward value="46991"/>
+			<total-profit value="43541"/>
+		</stat>
+	</statistics>
+</history>
+>>>>>>> master

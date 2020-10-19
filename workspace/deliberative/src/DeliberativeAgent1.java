@@ -110,34 +110,26 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 	}
 
 	private Plan aStarPlan(Vehicle vehicle, TaskSet tasks) throws Exception {
+		int QUEUESIZE = 1000;
 		System.out.println("Astar strarting");
 
-		Queue<State> Q = new LinkedList<>();
-		State n;
-		Plan plan = new Plan(vehicle.homeCity());
-		Comparator<State> compareByCost = Comparator.comparing(State::getCost);
-		
 		ArrayList<State> C = new ArrayList<>();
-		List<State> S;
 
+		Comparator<State> compareByCost = Comparator.comparing(State::getCost);
+		PriorityQueue<State> Q = new PriorityQueue(QUEUESIZE, compareByCost);
 
 		Q.add(new State(vehicle, tasks));
 
 		while (true) {
-			if (Q.isEmpty()) {
-				throw new AssertionError("Q is empty");
-			}
+			if (Q.isEmpty()) { throw new AssertionError("Solution not found"); }
 
-			n = Q.poll();
+			State n = Q.poll();
 
-			if (n.isFinal()) {
-				return n.getPlan(vehicle);
-			}
+			if (n.isFinal()) { return n.getPlan(vehicle); }
 
 			if(checkNovelty(n, C)){
 				C.add(n);
-				S = n.getAccessibles();
-				S.sort(compareByCost); //TODO compare by heuristic: here h(n) = 0;
+				List<State> S = n.getAccessibles();
 				Q.addAll(S);
 			}
 		}
