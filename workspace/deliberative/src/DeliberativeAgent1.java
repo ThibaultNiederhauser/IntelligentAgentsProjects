@@ -41,8 +41,6 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 		
 		// Throws IllegalArgumentException if algorithm is unknown
 		algorithm = Algorithm.valueOf(algorithmName.toUpperCase());
-		
-		// ...
 	}
 	
 	@Override
@@ -53,14 +51,21 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 		switch (algorithm) {
 		case ASTAR:
 			try {
+				long startTime = System.currentTimeMillis();
 				plan = aStarPlan(vehicle, tasks);
+				long elapsedTime = System.currentTimeMillis() - startTime;
+				System.out.println("Elapsed time: " + elapsedTime);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			break;
 		case BFS:
 			try {
+				long startTime = System.currentTimeMillis();
 				plan = bfsPlan(vehicle, tasks);
+				long elapsedTime = System.currentTimeMillis() - startTime;
+				System.out.println("Elapsed time: " + elapsedTime);
+
 			} catch (Exception e) {
 				throw new AssertionError("Should not happen.");
 			}
@@ -71,12 +76,13 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 		default:
 			throw new AssertionError("Should not happen.");
 		}
-		int DEBUG = 1;
+
+		int DEBUG = 0;
 		if (DEBUG == 1) {
 			try {
 				Plan plan1 = aStarPlan(vehicle, tasks);
 				Plan plan2 = bfsPlan(vehicle, tasks);
-				System.out.println("bring bring bring");
+				System.out.println("plan comparison");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -110,14 +116,16 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 	}
 
 	private Plan aStarPlan(Vehicle vehicle, TaskSet tasks) throws Exception {
+		/** Compute optimal plan using A-star**/
+
 		int QUEUESIZE = 1000;
-		System.out.println("Astar strarting");
-
 		ArrayList<State> C = new ArrayList<>();
+		//Declare Q sorted by heuristic function f(n):
+		Comparator<State> compareByPriority = Comparator.comparing(State::getCost);
+		PriorityQueue<State> Q = new PriorityQueue(QUEUESIZE, compareByPriority);
 
-		Comparator<State> compareByCost = Comparator.comparing(State::getCost);
-		PriorityQueue<State> Q = new PriorityQueue(QUEUESIZE, compareByCost);
-
+		//A-star algorithm
+		System.out.println("Astar starting");
 		Q.add(new State(vehicle, tasks));
 
 		while (true) {
@@ -125,25 +133,32 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 
 			State n = Q.poll();
 
-			if (n.isFinal()) { return n.getPlan(vehicle); }
+			if (n.isFinal()) {
+				System.out.println("A-star over");
+				return n.getPlan(vehicle);
+			}
 
+			//consider n only if it was never seen
+			// or if it has a lower cost than the already seen identical state
 			if(checkNovelty(n, C)){
 				C.add(n);
 				List<State> S = n.getAccessibles();
-				Q.addAll(S);
+				Q.addAll(S); //merge S and Q. Q is sorted wrt the heuristic fct
 			}
 		}
 	}
 	
 		
 	private Plan bfsPlan(Vehicle vehicle, TaskSet tasks) throws Exception {
-		System.out.println("BFS strarting");
-		State start = new State(vehicle, tasks);
+		/** Compute optimal plan using Breadth First Search**/
 
+		State start = new State(vehicle, tasks);
 		Queue<State> Q = new LinkedList<>();
 		List<State> visitedList = new ArrayList<>();
-		Q.add(start);
 
+		//BFS Algorithm
+		System.out.println("BFS strarting");
+		Q.add(start);
 		double bestCost = Double.POSITIVE_INFINITY;
 		State bestState = start;
 
@@ -176,6 +191,8 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 	}
 
 	public boolean checkNovelty(State s, List<State> visitedStates){
+		//Checks that state s was never seen or that it has a lower cost than the already
+		//seen identical state
 		for (State v : visitedStates){
 			if (!v.isNovelty(s))
 				return false;
