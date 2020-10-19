@@ -12,7 +12,6 @@ public class State implements Cloneable {
     private TaskSet pick_tasks;
     private TaskSet deliv_tasks;
     private int capacity;
-    private int tmp_capacity;
     private double costPerKm;
     private List<Action> actionTrace = new ArrayList<Action>();
     private double total_cost;
@@ -28,24 +27,13 @@ public class State implements Cloneable {
     }
 
 
-    public State(TaskSet pick_tasks, TaskSet deliv_tasks, City city, double total_cost,
-                    List<Action> actionTrace){
-        this.location = city;
-        this.pick_tasks = pick_tasks;
-        this.deliv_tasks = deliv_tasks;
-        this.total_cost = total_cost;
-        this.actionTrace = actionTrace;
-    }
-
-
     private List<Action> getTrivialActions() {
         // Check instantaneous tasks
-        tmp_capacity = capacity;
         List<Action> actions = new ArrayList<Action>();
         for (Task task : deliv_tasks) {
             if (task.deliveryCity == this.location) {
                 actions.add(new Action(Action.Type.DELIVER, task));
-                tmp_capacity += task.weight;
+                this.capacity += task.weight;
             }
         }
         return actions;
@@ -60,7 +48,7 @@ public class State implements Cloneable {
             }
         }
         for (Task task : pick_tasks) {
-            if (task.weight <= this.tmp_capacity) {
+            if (task.weight <= this.capacity) {
                 actions.add(new Action(Action.Type.PICKUP, task));
             }
         }
@@ -91,7 +79,7 @@ public class State implements Cloneable {
 
         for (Action action : trivialActions) {
             if (action.type == Action.Type.DELIVER) {
-                trivialState.capacity += action.task.weight;
+                // trivialState.capacity += action.task.weight; this was previously updated @line 36
                 trivialState.deliv_tasks.remove(action.task);
                 trivialState.actionTrace.add(action);
             }
