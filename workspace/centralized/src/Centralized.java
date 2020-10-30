@@ -15,6 +15,7 @@ import logist.topology.Topology.City;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A very simple auction agent that assigns all tasks to its first vehicle and
@@ -56,7 +57,15 @@ public class Centralized implements CentralizedBehavior {
     @Override
     public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
         long time_start = System.currentTimeMillis();
-        
+
+        //initialize the variable as null lists
+        int nT = tasks.size();
+        int nV = vehicles.size();
+        Variables var = new Variables();
+        var.initVariables(nT, nV);
+
+        var.selectInitialSolution(vehicles, tasks);
+
 //		System.out.println("Agent " + agent.id() + " has tasks " + tasks);
         Plan planVehicle1 = naivePlan(vehicles.get(0), tasks);
 
@@ -97,4 +106,11 @@ public class Centralized implements CentralizedBehavior {
         }
         return plan;
     }
+
+    /*private Plan SLSPlan(Vehicle vehicle, TaskSet tasks, Variables var) {
+        //TODO
+
+    }*/
+
 }
+

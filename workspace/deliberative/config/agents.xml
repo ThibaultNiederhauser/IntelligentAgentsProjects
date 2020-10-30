@@ -4,13 +4,8 @@
 	<!-- A list of agents and their behavior classes -->
 	
 	<!-- #### DELIBERATIVE AGENTS ### -->
-	<agent name="deliberative-bfs">
-		<set class-path="bin/"/>
-		<set class-name="DeliberativeAgent1"/>
-		<set algorithm="BFS"/>
-	</agent>
 
-	<agent name="deliberative-astar">
+	<agent name="deliberative-main">
 		<set class-path="bin/"/>
 		<set class-name="DeliberativeAgent1"/>
 		<set algorithm="ASTAR"/>

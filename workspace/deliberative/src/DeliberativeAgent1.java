@@ -46,6 +46,35 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 	@Override
 	public Plan plan(Vehicle vehicle, TaskSet tasks) {
 		Plan plan = null;
+		int COMPARE = 0;
+		if (COMPARE == 1) { //TO COMPARE PLANS OF THE 3 ALGO
+			try {
+				long startTime = System.currentTimeMillis();
+				Plan plan1 = bfsPlan(vehicle, tasks);
+				long elapsed1 = System.currentTimeMillis()-startTime;
+
+				startTime = System.currentTimeMillis();
+				Plan plan2 = aStarPlanNumb(vehicle, tasks);
+				long elapsed2 = System.currentTimeMillis() - startTime;
+
+				startTime = System.currentTimeMillis();
+				Plan plan3 = aStarPlan(vehicle, tasks);
+				long elapsed3 = System.currentTimeMillis() - startTime;
+				System.out.println("plan comparison:");
+				System.out.println("time bfs: " + elapsed1);
+				System.out.println("plan bfs: " + plan1);
+				System.out.println("time astar numb: " + elapsed2);
+				System.out.println("plan astar numb: " + plan2);
+				System.out.println("time astar: " + elapsed3);
+				System.out.println("plan astar: " + plan3);
+
+				return plan3;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
 
 		// Compute the plan with the selected algorithm.
 		switch (algorithm) {
@@ -77,16 +106,6 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 			throw new AssertionError("Should not happen.");
 		}
 
-		int DEBUG = 0;
-		if (DEBUG == 1) {
-			try {
-				Plan plan1 = aStarPlan(vehicle, tasks);
-				Plan plan2 = bfsPlan(vehicle, tasks);
-				System.out.println("plan comparison");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		return plan;
 	}
 	
@@ -116,6 +135,40 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 	}
 
 	private Plan aStarPlan(Vehicle vehicle, TaskSet tasks) throws Exception {
+		/** Compute optimal plan using A-star**/
+
+		int QUEUESIZE = 1000;
+		ArrayList<State> C = new ArrayList<>();
+		//Declare Q sorted by heuristic function f(n):
+		Comparator<State> compareByPriority = Comparator.comparing(State::getPriority);
+		PriorityQueue<State> Q = new PriorityQueue(QUEUESIZE, compareByPriority);
+
+		//A-star algorithm
+		System.out.println("Astar starting");
+		Q.add(new State(vehicle, tasks));
+
+		while (true) {
+			if (Q.isEmpty()) { throw new AssertionError("Solution not found"); }
+
+			State n = Q.poll();
+
+			if (n.isFinal()) {
+				System.out.println("A-star over");
+				return n.getPlan(vehicle);
+			}
+
+			//consider n only if it was never seen
+			// or if it has a lower cost than the already seen identical state
+			if(checkNovelty(n, C)){
+				C.add(n);
+				List<State> S = n.getAccessibles();
+				Q.addAll(S); //merge S and Q. Q is sorted wrt the heuristic fct
+			}
+		}
+	}
+
+
+	private Plan aStarPlanNumb(Vehicle vehicle, TaskSet tasks) throws Exception {
 		/** Compute optimal plan using A-star**/
 
 		int QUEUESIZE = 1000;
@@ -157,7 +210,7 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 		List<State> visitedList = new ArrayList<>();
 
 		//BFS Algorithm
-		System.out.println("BFS strarting");
+		System.out.println("BFS starting");
 		Q.add(start);
 		double bestCost = Double.POSITIVE_INFINITY;
 		State bestState = start;
@@ -184,9 +237,8 @@ public class DeliberativeAgent1 implements DeliberativeBehavior {
 
 	@Override
 	public void planCancelled(TaskSet carriedTasks) {
-		
-		if (!carriedTasks.isEmpty()) {
 
+		if (!carriedTasks.isEmpty()) {
 		}
 	}
 
