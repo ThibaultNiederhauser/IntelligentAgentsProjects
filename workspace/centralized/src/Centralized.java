@@ -62,7 +62,7 @@ public class Centralized implements CentralizedBehavior {
         int nT = tasks.size();
         int nV = vehicles.size();
         Variables var = new Variables();
-        var.initVariables(nT, nV);
+        var.initVariables(vehicles, tasks);
 
         var.selectInitialSolution(vehicles, tasks);
 

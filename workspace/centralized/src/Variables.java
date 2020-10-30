@@ -2,71 +2,69 @@ import logist.task.Task;
 import logist.simulation.Vehicle;
 import logist.task.TaskSet;
 
-
-
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
 
 public class Variables {
-    private ArrayList<Task> nextTask = new ArrayList<>();
-    private ArrayList<Integer> time = new ArrayList<>();
-    private ArrayList<Vehicle> vehicle = new ArrayList<>();
-    private int numTasks;
-    private int numVehicles;
+    private HashMap<Task, Task> nextTaskT = new HashMap<>();
+    private HashMap<Vehicle, Task> nextTaskV = new HashMap<>();
+    private HashMap<Task, Integer> time = new HashMap<>();
+    private HashMap<Task, Vehicle> vehicle = new HashMap<>();
 
-    public void setNextTask(TaskSet set){
+    /*public void setNextTask(TaskSet set){
         int i = 0;
         for(Task t : set){
-            nextTask.set(i, t);
+            nextTaskT.put(t, t);
             i++;
         }
-    }
+    }*/
 
-    public void setTime(List<Integer> time_input){
+    /*public void setTime(List<Integer> time_input){
         int i = 0;
         for(int t: time_input){
             time.set(i, t);
             i++;
         }
-    }
+    }*/
 
-    public void setVehicle(List<Vehicle> vehicle_input){
+    /*public void setVehicle(List<Vehicle> vehicle_input){
         int i = 0;
         for(Vehicle v: vehicle_input) {
             vehicle.set(i, v);
             i++;
         }
-    }
+    }*/
 
-    private void initNextTask(int nT, int nV){
-        for(int i = 0; i<(nT+nV); i++ ){
-            nextTask.add(null);
+    private void initNextTask(List<Vehicle> vehicles, TaskSet tasks){
+        for(Task t: tasks){
+            nextTaskT.put(t, null);
+        }
+
+        for(Vehicle v: vehicles){
+            nextTaskV.put(v, null);
         }
     }
 
-    private void initVehicle(int nT){
-        for(int i = 0; i<(nT); i++ ){
-            vehicle.add(null);
+    private void initVehicle(TaskSet tasks){
+        for(Task t: tasks){
+            vehicle.put(t, null);
         }
     }
 
-    private void initTime(int nT){
-        for(int i = 0; i<(nT); i++ ){
-            time.add(null);
+    private void initTime(TaskSet tasks){
+        for(Task t: tasks){
+            time.put(t, null);
         }
     }
 
-    public void initVariables(int nT, int nV){
-        initNextTask(nT, nV);
-        initVehicle(nT);
-        initTime(nT);
+    public void initVariables(List<Vehicle> vehicles, TaskSet tasks){
+        initNextTask(vehicles, tasks);
+        initVehicle(tasks);
+        initTime(tasks);
 
-        numTasks = nT;
-        numVehicles = nV;
     }
 
     public void selectInitialSolution(List<Vehicle> vehicle_list, TaskSet tasks){
+        Iterator<Task> taskIterator = tasks.iterator();
         //find vehicle with biggest capacity
         Vehicle biggestVehicle = vehicle_list.get(0);
         for(Vehicle v: vehicle_list){
@@ -76,26 +74,33 @@ public class Variables {
         }
 
         //set variables
+        if(taskIterator.hasNext()){
+            nextTaskV.put(biggestVehicle, taskIterator.next()); //set nextTask(vk)}
+        }
         int i = 0;
         for(Task t: tasks){
-            if(t.id == 0){ //TODO maybe use a list of tasks instead of set, to use get()
-                nextTask.set(biggestVehicle.id() + numTasks, t); //set nextTask(vk)
-            }
-
-
             if(t.weight > biggestVehicle.capacity()) {throw new AssertionError
                     ("Problem unsolvable!");}
 
             //set nextTask(ti)
-            nextTask.set(i, t);
+            if(taskIterator.hasNext()) {
+                nextTaskT.put(t, taskIterator.next());
+            }
 
             //set vehicle
-            vehicle.set(i, biggestVehicle);
+            vehicle.put(t, biggestVehicle);
 
             //set time
-            time.set(i,(i+1));
+            time.put(t,(i+1));
             i++;
         }
     }
+
+    /*public void chooseNeighbour(){
+        Random rand = new Random();
+        Variables oldA = this;
+        while(oldA.nextTask(numTasks + ))
+        Vehicle v_i = vehicle.get(rand.nextInt(numVehicles))
+    }*/
 
 }
