@@ -61,10 +61,14 @@ public class Centralized implements CentralizedBehavior {
         //initialize the variable as null lists
         int nT = tasks.size();
         int nV = vehicles.size();
+        List<Variables> N;
         Variables var = new Variables();
         var.initVariables(vehicles, tasks);
 
         var.selectInitialSolution(vehicles, tasks);
+        System.out.println("Choose neighbours");
+        N = var.chooseNeighbour(vehicles);
+        System.out.println("Neighbours chosen");
 
 //		System.out.println("Agent " + agent.id() + " has tasks " + tasks);
         Plan planVehicle1 = naivePlan(vehicles.get(0), tasks);
