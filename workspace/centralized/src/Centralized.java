@@ -14,6 +14,7 @@ import logist.topology.Topology.City;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -66,24 +67,17 @@ public class Centralized implements CentralizedBehavior {
         var.initVariables(vehicles, tasks);
 
         var.selectInitialSolution(vehicles, tasks);
-        System.out.println("Choose neighbours");
-        N = var.chooseNeighbour(vehicles);
-        System.out.println("Neighbours chosen");
-
-//		System.out.println("Agent " + agent.id() + " has tasks " + tasks);
-        Plan planVehicle1 = naivePlan(vehicles.get(0), tasks);
-
-        List<Plan> plans = new ArrayList<Plan>();
-        plans.add(planVehicle1);
-        while (plans.size() < vehicles.size()) {
-            plans.add(Plan.EMPTY);
+        for(int i = 0; i<1000; i++) { //TODO better stopping criteria
+            System.out.println("Choose neighbours");
+            N = var.chooseNeighbour(vehicles);
+            System.out.println("Neighbours chosen");
+            var = var.LocalChoice(N, tasks, vehicles); //TODO change fct with "this"
         }
-        
-        long time_end = System.currentTimeMillis();
-        long duration = time_end - time_start;
-        System.out.println("The plan was generated in " + duration + " milliseconds.");
-        
-        return plans;
+        System.out.println("Loop over");
+
+        List<Plan> SLSPlan = createPlan(var, vehicles, tasks);
+
+        return SLSPlan;
     }
 
     private Plan naivePlan(Vehicle vehicle, TaskSet tasks) {
@@ -109,6 +103,41 @@ public class Centralized implements CentralizedBehavior {
             current = task.deliveryCity;
         }
         return plan;
+    }
+
+    private List<Plan> createPlan(Variables A, List<Vehicle> vehicles, TaskSet tasks){
+        ArrayList<Plan> multiVPlan = new ArrayList<>();
+        Task t;
+        for(Vehicle v:vehicles){
+            City current = v.getCurrentCity();
+            Plan plan = new Plan(current);
+
+            t = A.nextTaskV.get(v);
+            while(t != null){
+                // move: current city => pickup location
+                for (City city : current.pathTo(t.pickupCity)) {
+                    plan.appendMove(city);
+                }
+
+                plan.appendPickup(t);
+
+                // move: pickup location => delivery location
+                for (City city : t.path()) {
+                    plan.appendMove(city);
+                }
+
+                plan.appendDelivery(t);
+
+                // set current city
+                current = t.deliveryCity;
+
+                t = A.nextTaskT.get(t);
+
+            }
+        multiVPlan.add(plan);
+
+        }
+        return multiVPlan;
     }
 
     /*private Plan SLSPlan(Vehicle vehicle, TaskSet tasks, Variables var) {

@@ -5,10 +5,10 @@ import logist.task.TaskSet;
 import java.util.*;
 
 public class Variables implements Cloneable{
-    private HashMap<Task, Task> nextTaskT = new HashMap<>();
-    private HashMap<Vehicle, Task> nextTaskV = new HashMap<>();
-    private HashMap<Task, Integer> time = new HashMap<>();
-    private HashMap<Task, Vehicle> vehicle = new HashMap<>();
+    public HashMap<Task, Task> nextTaskT = new HashMap<>();
+    public HashMap<Vehicle, Task> nextTaskV = new HashMap<>();
+    public HashMap<Task, Integer> time = new HashMap<>();
+    public HashMap<Task, Vehicle> vehicle = new HashMap<>();
 
     /*public void setNextTask(TaskSet set){
         int i = 0;
@@ -231,9 +231,48 @@ public class Variables implements Cloneable{
         return A1;
     }
 
-   /* public Variables LocalChoice(List<Variables> N){
+    public Variables LocalChoice(List<Variables> N, TaskSet tasks, List<Vehicle> vehicle_list){
+        Variables bestN = this;
+        double bestCost = costFunction(this, tasks, vehicle_list);
+        double currentCost;
 
+        for(Variables var: N){
+            currentCost = costFunction(var, tasks, vehicle_list);
+            if(currentCost < bestCost){
+                bestN = var.copy();
+                bestCost = currentCost;
+            }
+        }
+        return  bestN; //TODO implement probability
     }
 
-    private Double costFunction(Variables A);*/
+    private Double costFunction(Variables var, TaskSet tasks, List<Vehicle> vehicles_list){
+        double c = 0;
+        double dist_btw;
+        double task_length;
+        double costPerK;
+        for(Task t : tasks){
+            if(t == null || var.nextTaskT.get(t) == null){continue;}
+
+            dist_btw = t.deliveryCity.distanceTo(var.nextTaskT.get(t).pickupCity);
+            task_length = var.nextTaskT.get(t).pickupCity
+                    .distanceTo(var.nextTaskT.get(t).deliveryCity);
+            costPerK = var.vehicle.get(t).costPerKm();
+
+            c = c + (dist_btw + task_length) * costPerK;
+        }
+
+        for(Vehicle v : vehicles_list){
+            if(var.nextTaskV.get(v)== null){continue;}
+            dist_btw = v.homeCity().distanceTo(var.nextTaskV.get(v).pickupCity);
+            task_length = var.nextTaskV.get(v).pickupCity.
+                    distanceTo(var.nextTaskV.get(v).deliveryCity);
+
+            costPerK = v.costPerKm();
+
+            c = c + (dist_btw + task_length) * costPerK;
+        }
+
+        return c;
+    }
 }
