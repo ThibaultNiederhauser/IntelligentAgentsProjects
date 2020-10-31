@@ -107,10 +107,13 @@ public class Variables implements Cloneable{
         Vehicle v_i = vehicle_list.get(rand.nextInt(vehicle_list.size()));
         while (oldA.nextTaskV.get(v_i) == null) {
             v_i = vehicle_list.get(rand.nextInt(vehicle_list.size()));
+            System.out.println("A");
         }
 
         //CHANGE vehicle
         for (Vehicle v_j : vehicle_list) {
+            System.out.println("B");
+
             if (v_j.equals(v_i)) {
                 continue;
             }
@@ -127,12 +130,15 @@ public class Variables implements Cloneable{
         int length = 0;
         t = oldA.nextTaskV.get(v_i);
         while(t != null){
+            System.out.println("C");
             t = oldA.nextTaskT.get(t);
             length++;
         }
         if(length>=2){
             for(int tIdx1 = 1; tIdx1 < length; tIdx1++){
                 for(int tIdx2 = tIdx1; tIdx2 < tIdx1 + length; tIdx2++){
+                    System.out.println("D");
+
                     A = changingTaskOrder(oldA, v_i, tIdx1, tIdx2);
                     N.add(A);
                 }
@@ -142,12 +148,14 @@ public class Variables implements Cloneable{
         return N;
     }
 
+
+
     private Variables copy(){
         Variables A_copy = new Variables();
-        A_copy.time = this.time;
-        A_copy.vehicle = this.vehicle;
-        A_copy.nextTaskV = this.nextTaskV;
-        A_copy.nextTaskT = this.nextTaskT;
+        A_copy.time = (HashMap<Task, Integer>) this.time.clone();
+        A_copy.vehicle = (HashMap<Task, Vehicle>) this.vehicle.clone();
+        A_copy.nextTaskV = (HashMap<Vehicle, Task>) this.nextTaskV.clone();
+        A_copy.nextTaskT = (HashMap<Task, Task>) this.nextTaskT.clone();
         return A_copy;
     }
 
@@ -159,22 +167,22 @@ public class Variables implements Cloneable{
         A1.nextTaskV.put(v1, A1.nextTaskT.get(t));
         A1.nextTaskT.put(t, A1.nextTaskV.get(v2));
         A1.nextTaskV.put(v2, t);
-        updateTime(A1, v1);
-        updateTime(A1, v2); //TODO check if A1 is modified correctly
+        A1.updateTime(v1);
+        A1.updateTime(v2); //TODO check if A1 is modified correctly
         A1.vehicle.put(t, v2);
         return A1;
     }
 
 
-    private void updateTime(Variables A, Vehicle v){
-        Task t = A.nextTaskV.get(v);
+    private void updateTime(Vehicle v){
+        Task t = this.nextTaskV.get(v);
         Task t_j;
         if(t != null){
-            A.time.put(t, 1);
+            this.time.put(t, 1);
             do {
-                t_j = A.nextTaskT.get(t);
+                t_j = this.nextTaskT.get(t);
                 if (t_j != null) {
-                    A.time.put(t_j, A.time.get(t) + 1);
+                    this.time.put(t_j, this.time.get(t) + 1);
                     t = t_j;
                 }
             } while (t_j != null);
@@ -219,8 +227,13 @@ public class Variables implements Cloneable{
             A1.nextTaskT.put(t2, tPost1);
             A1.nextTaskT.put(t1, tPost2);
         }
-        updateTime(A1, v);
+        A1.updateTime(v);
         return A1;
     }
 
+   /* public Variables LocalChoice(List<Variables> N){
+
+    }
+
+    private Double costFunction(Variables A);*/
 }
