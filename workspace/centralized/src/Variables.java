@@ -10,6 +10,8 @@ public class Variables implements Cloneable{
     public HashMap<Task, Integer> time = new HashMap<>();
     public HashMap<Task, Vehicle> vehicle = new HashMap<>();
 
+    private final double p = 0.9;
+
     /*public void setNextTask(TaskSet set){
         int i = 0;
         for(Task t : set){
@@ -161,7 +163,6 @@ public class Variables implements Cloneable{
 
     private Variables changingVehicle(Variables A, Vehicle v1, Vehicle v2) {
         Variables A1 = A.copy();
-        //TODO check cloning
 
         Task t = A.nextTaskV.get(v1);
         A1.nextTaskV.put(v1, A1.nextTaskT.get(t));
@@ -235,6 +236,8 @@ public class Variables implements Cloneable{
         Variables bestN = this;
         double bestCost = costFunction(this, tasks, vehicle_list);
         double currentCost;
+        SplittableRandom random = new SplittableRandom();
+
 
         for(Variables var: N){
             currentCost = costFunction(var, tasks, vehicle_list);
@@ -243,7 +246,15 @@ public class Variables implements Cloneable{
                 bestCost = currentCost;
             }
         }
-        return  bestN; //TODO implement probability
+
+
+        boolean val = random.nextInt(1, 101) <= p*100; //val is true with proba p
+        if(val){
+            return  bestN;
+        }
+        else{
+            return this;
+        }
     }
 
     private Double costFunction(Variables var, TaskSet tasks, List<Vehicle> vehicles_list){
