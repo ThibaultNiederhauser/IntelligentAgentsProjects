@@ -9,6 +9,7 @@ public class Variables implements Cloneable{
     public HashMap<Vehicle, Task> nextTaskV = new HashMap<>();
     public HashMap<Task, Integer> time = new HashMap<>();
     public HashMap<Task, Vehicle> vehicle = new HashMap<>();
+    public Double BestCost;
 
     private final double p = 0.9;
 
@@ -73,6 +74,8 @@ public class Variables implements Cloneable{
             time.put(t,(i+1));
             i++;
         }
+
+        this.BestCost = costFunction(this, tasks, vehicle_list);
     }
 
     public List<Variables> chooseNeighbour(List<Vehicle> vehicle_list) {
@@ -244,7 +247,7 @@ public class Variables implements Cloneable{
 
     public Variables LocalChoice(List<Variables> N, TaskSet tasks, List<Vehicle> vehicle_list){
         Variables bestN = this;
-        double bestCost = costFunction(this, tasks, vehicle_list);
+        double bestCost = this.BestCost;
         double currentCost = Double.POSITIVE_INFINITY;
         SplittableRandom random = new SplittableRandom();
 
@@ -258,6 +261,7 @@ public class Variables implements Cloneable{
 
         boolean val = random.nextInt(1, 101) < p*100; //val is true with proba p
         if(val){
+            bestN.BestCost = bestCost;
             return  bestN;
         }
         else{

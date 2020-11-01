@@ -62,13 +62,29 @@ public class Centralized implements CentralizedBehavior {
         int nV = vehicles.size();
         List<Variables> N;
         Variables var = new Variables(vehicles, tasks);
+        double formerBestCost = Double.POSITIVE_INFINITY;
+        int NoImprovement = 0;
+        int i = 0;
 
         var.selectInitialSolution(vehicles, tasks);
-        for(int i = 0; i<10000; i++) { //TODO better stopping criteria
-            System.out.println("Choose neighbours");
+        while(NoImprovement < 1000) { //TODO better stopping criteria
+            //System.out.println("Choose neighbours");
             N = var.chooseNeighbour(vehicles); //TODO no need to pass vehicles?
-            System.out.println("Neighbours chosen " + i);
+            //System.out.println("Neighbours chosen " + i);
+
+
             var = var.LocalChoice(N, tasks, vehicles); //TODO change fct with "this" and add N to variables?
+            if(var.BestCost >= formerBestCost){
+                NoImprovement ++;
+                System.out.println("NO IMPROVMENT: " + NoImprovement);
+            }
+            else{
+                formerBestCost = var.BestCost;
+            }
+            System.out.println("BEST COST " + var.BestCost);
+            System.out.println("FORMER COST " + formerBestCost);
+
+            i++;
         }
         System.out.println("Loop over");
 
