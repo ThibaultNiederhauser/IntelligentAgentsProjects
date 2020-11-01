@@ -14,9 +14,7 @@ import logist.topology.Topology.City;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A very simple auction agent that assigns all tasks to its first vehicle and
@@ -69,9 +67,9 @@ public class Centralized implements CentralizedBehavior {
         var.selectInitialSolution(vehicles, tasks);
         for(int i = 0; i<10000; i++) { //TODO better stopping criteria
             System.out.println("Choose neighbours");
-            N = var.chooseNeighbour(vehicles);
+            N = var.chooseNeighbour(vehicles); //TODO no need to pass vehicles?
             System.out.println("Neighbours chosen " + i);
-            var = var.LocalChoice(N, tasks, vehicles); //TODO change fct with "this"
+            var = var.LocalChoice(N, tasks, vehicles); //TODO change fct with "this" and add N to variables?
         }
         System.out.println("Loop over");
 

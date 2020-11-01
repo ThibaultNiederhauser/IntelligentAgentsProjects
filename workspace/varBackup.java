@@ -234,8 +234,8 @@ public class Variables implements Cloneable{
             else{
                 A1.nextTaskV.put(v, t2); //TODO take out of if
             }
-           A1.nextTaskT.put(t2, t1);
-           A1.nextTaskT.put(t1, tPost2);
+            A1.nextTaskT.put(t2, t1);
+            A1.nextTaskT.put(t1, tPost2);
         }
         else{
             if(tPre1 != null) {
@@ -308,3 +308,4 @@ public class Variables implements Cloneable{
         return c;
     }
 }
+
