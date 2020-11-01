@@ -12,29 +12,13 @@ public class Variables implements Cloneable{
 
     private final double p = 0.9;
 
-    /*public void setNextTask(TaskSet set){
-        int i = 0;
-        for(Task t : set){
-            nextTaskT.put(t, t);
-            i++;
-        }
-    }*/
+    public Variables(){}
 
-    /*public void setTime(List<Integer> time_input){
-        int i = 0;
-        for(int t: time_input){
-            time.set(i, t);
-            i++;
-        }
-    }*/
-
-    /*public void setVehicle(List<Vehicle> vehicle_input){
-        int i = 0;
-        for(Vehicle v: vehicle_input) {
-            vehicle.set(i, v);
-            i++;
-        }
-    }*/
+    public Variables(List<Vehicle> vehicles, TaskSet tasks){
+        initNextTask(vehicles, tasks);
+        initVehicle(tasks);
+        initTime(tasks);
+    }
 
     private void initNextTask(List<Vehicle> vehicles, TaskSet tasks){
         for(Task t: tasks){
@@ -56,13 +40,6 @@ public class Variables implements Cloneable{
         for(Task t: tasks){
             time.put(t, null);
         }
-    }
-
-    public void initVariables(List<Vehicle> vehicles, TaskSet tasks){
-        initNextTask(vehicles, tasks);
-        initVehicle(tasks);
-        initTime(tasks);
-
     }
 
     public void selectInitialSolution(List<Vehicle> vehicle_list, TaskSet tasks){
