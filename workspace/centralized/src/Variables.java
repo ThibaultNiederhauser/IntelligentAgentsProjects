@@ -107,20 +107,20 @@ public class Variables implements Cloneable{
 
         //select changing vehicule
         Vehicle v_i = vehicle_list.get(rand.nextInt(vehicle_list.size()));
-        while (oldA.nextTaskV.get(v_i) == null) {
+
+        while(oldA.nextTaskV.get(v_i) == null) {
             v_i = vehicle_list.get(rand.nextInt(vehicle_list.size()));
-            System.out.println("A");
         }
+
 
         //CHANGE vehicle
         for (Vehicle v_j : vehicle_list) {
-            System.out.println("B");
 
             if (v_j.equals(v_i)) {
                 continue;
             }
             t = oldA.nextTaskV.get(v_i);
-            if(t == null){continue;}
+            //if(t == null){continue;} //never happens
 
             if (t.weight <= v_j.capacity()) {
                A = changingVehicle(oldA, v_i, v_j);
@@ -132,15 +132,12 @@ public class Variables implements Cloneable{
         int length = 0;
         t = oldA.nextTaskV.get(v_i);
         while(t != null){
-            System.out.println("C");
             t = oldA.nextTaskT.get(t);
             length++;
         }
         if(length>=2){
-            for(int tIdx1 = 1; tIdx1 < length; tIdx1++){
-                for(int tIdx2 = tIdx1; tIdx2 < tIdx1 + length; tIdx2++){
-                    System.out.println("D");
-
+            for(int tIdx1 = 1; tIdx1 < length; tIdx1++){ //idx start at 1
+                for(int tIdx2 = tIdx1 + 1; tIdx2 < length + 1; tIdx2++){
                     A = changingTaskOrder(oldA, v_i, tIdx1, tIdx2);
                     N.add(A);
                 }
@@ -192,8 +189,8 @@ public class Variables implements Cloneable{
 
     private Variables changingTaskOrder(Variables A, Vehicle v, int tIdx1, int tIdx2){
         Variables A1 = A.copy();
+        Task tPre1 = null; //A1.nextTaskV.get(v); //TODO check if correct
         Task t1 = A1.nextTaskV.get(v);
-        Task tPre1 = t1; //TODO this is WRONG
 
         int count = 1;
 
@@ -208,22 +205,29 @@ public class Variables implements Cloneable{
         Task t2 = A1.nextTaskT.get(tPre2);
         count++;
 
-        while(count < tIdx2){ //TODO function for the while loop (comes twice)
+        while(count < tIdx2){ //TODO function for the while loop (comes twice), optional
             tPre2 = t2;
             t2 = A1.nextTaskT.get(t2);
             count++;
-
         }
+
         Task tPost2 = A1.nextTaskT.get(t2);
 
         //EXCHANGING 2 Tasks
-        if(tPost1 == t2){ //TODO check equality works
+
+        if(tPost1 != null && tPost1.equals(t2)){
            A1.nextTaskT.put(tPre1, t2);
            A1.nextTaskT.put(t2, t1);
            A1.nextTaskT.put(t1, tPost2);
         }
         else{
-            A1.nextTaskT.put(tPre1, t2);
+            if(tPre1 != null) {
+                A1.nextTaskT.put(tPre1, t2);
+            }
+            else{
+                A1.nextTaskV.put(v, t2); //if t2 needs to be moved if first pos
+            }
+
             A1.nextTaskT.put(tPre2, t1);
             A1.nextTaskT.put(t2, tPost1);
             A1.nextTaskT.put(t1, tPost2);

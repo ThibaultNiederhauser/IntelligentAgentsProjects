@@ -70,7 +70,7 @@ public class Centralized implements CentralizedBehavior {
         for(int i = 0; i<10000; i++) { //TODO better stopping criteria
             System.out.println("Choose neighbours");
             N = var.chooseNeighbour(vehicles);
-            System.out.println("Neighbours chosen");
+            System.out.println("Neighbours chosen " + i);
             var = var.LocalChoice(N, tasks, vehicles); //TODO change fct with "this"
         }
         System.out.println("Loop over");
@@ -108,9 +108,12 @@ public class Centralized implements CentralizedBehavior {
     private List<Plan> createPlan(Variables A, List<Vehicle> vehicles, TaskSet tasks){
         ArrayList<Plan> multiVPlan = new ArrayList<>();
         Task t;
+        City current;
+        Plan plan;
+
         for(Vehicle v:vehicles){
-            City current = v.getCurrentCity();
-            Plan plan = new Plan(current);
+            current = v.getCurrentCity();
+            plan = new Plan(current);
 
             t = A.nextTaskV.get(v);
             while(t != null){
@@ -132,8 +135,8 @@ public class Centralized implements CentralizedBehavior {
                 current = t.deliveryCity;
 
                 t = A.nextTaskT.get(t);
-
             }
+
         multiVPlan.add(plan);
 
         }
