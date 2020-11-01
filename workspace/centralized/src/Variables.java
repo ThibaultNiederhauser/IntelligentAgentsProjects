@@ -216,7 +216,12 @@ public class Variables implements Cloneable{
         //EXCHANGING 2 Tasks
 
         if(tPost1 != null && tPost1.equals(t2)){
-           A1.nextTaskT.put(tPre1, t2);
+            if(tPre1 != null){
+                A1.nextTaskT.put(tPre1, t2);
+            }
+            else{
+                A1.nextTaskV.put(v, t2); //TODO take out of if
+            }
            A1.nextTaskT.put(t2, t1);
            A1.nextTaskT.put(t1, tPost2);
         }
