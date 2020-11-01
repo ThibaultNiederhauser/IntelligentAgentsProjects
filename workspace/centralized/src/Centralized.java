@@ -61,8 +61,7 @@ public class Centralized implements CentralizedBehavior {
         int nT = tasks.size();
         int nV = vehicles.size();
         List<Variables> N;
-        Variables var = new Variables();
-        var.initVariables(vehicles, tasks);
+        Variables var = new Variables(vehicles, tasks);
 
         var.selectInitialSolution(vehicles, tasks);
         for(int i = 0; i<10000; i++) { //TODO better stopping criteria

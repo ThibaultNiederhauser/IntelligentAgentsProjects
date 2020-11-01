@@ -44,7 +44,7 @@
 				<set capacity="30" />
 				<set cost-per-km="5" />
 			</vehicle>
-			
+
 			<!-- the third vehicle (green) -->
 			<vehicle name="Vehicle 3">
 				<set color="#00ff00" />
@@ -53,7 +53,7 @@
 				<set capacity="30" />
 				<set cost-per-km="5" />
 			</vehicle>
-			
+
 			<!-- the fourth vehicle (yellow) -->
 			<vehicle name="Vehicle 4">
 				<set color="#ffff00" />
