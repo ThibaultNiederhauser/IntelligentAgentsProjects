@@ -143,14 +143,26 @@ public class Variables implements Cloneable{
     private Variables changingVehicle(Variables A, Vehicle v1, Vehicle v2, Task t){
         Variables A1 = A.copy();
         int id = 1;
+        Task tPre = null;
         Task t_i = A1.nextTaskV.get(v1);
         while(!t_i.equals(t)) {
-            t_i = A1.nextTaskT.get(t_i);
+            tPre = t_i;
+            t_i = A1.nextTaskT.get(tPre);
             id++;
         }
-        A1 = changingTaskOrder(A1, v1, 1, id);
+        Task tPost = A1.nextTaskT.get(t);
+
+
         //Task t = A.nextTaskV.get(v1);
-        A1.nextTaskV.put(v1, A1.nextTaskT.get(t));
+        //remove t from v1:
+        if(id == 1) { //if the first Task is removed from v1
+            A1.nextTaskV.put(v1, A1.nextTaskT.get(t));
+        }
+        else{
+            A1.nextTaskT.put(tPre, tPost);
+        }
+
+        //add t in beginning of v2
         A1.nextTaskT.put(t, A1.nextTaskV.get(v2));
         A1.nextTaskV.put(v2, t);
         A1.updateTime(v1);
