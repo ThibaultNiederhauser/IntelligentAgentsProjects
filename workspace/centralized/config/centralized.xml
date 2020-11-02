@@ -13,7 +13,7 @@
 	<agents import="config/agents.xml" />
 	
 	<!-- define task distribution -->
-	<tasks number="10" rngSeed="123456">
+	<tasks number="30" rngSeed="123456">
 		<!--
 			the probabilities, rewards and weight of tasks
 		-->
@@ -33,7 +33,7 @@
 				<set home="Newcastle" />
 				<set speed="90" />
 				<set capacity="30" />
-				<set cost-per-km="50" />
+				<set cost-per-km="500" />
 			</vehicle>
 
 			<!-- the second vehicle (red) -->

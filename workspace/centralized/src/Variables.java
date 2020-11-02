@@ -15,7 +15,6 @@ public class Variables implements Cloneable{
     public Double BestCost;
     public boolean localChoiceBool;
 
-    private final double p = 0.9;
 
     public Variables(){}
 
@@ -128,7 +127,6 @@ public class Variables implements Cloneable{
             this.time.put(t, (i+1));
             i++;
         }*/
-
         this.BestCost = this.costFunction();
     }
 
@@ -387,7 +385,7 @@ public class Variables implements Cloneable{
         return true;
 
     }
-    public Variables LocalChoice(List<Variables> N){
+    public Variables LocalChoice(List<Variables> N, double AbsoluteBest, double p){
         ArrayList<Variables> bestN = new ArrayList<>();
         bestN.add(this.copy());
         ArrayList<Variables> improvN = new ArrayList<>();
@@ -418,7 +416,8 @@ public class Variables implements Cloneable{
             choice = bestN.get(0);
         }
 
-        boolean val = random.nextInt(1, 101) < p*100; //val is true with proba p
+
+        boolean val = random.nextInt(1, 101) <= p*100; //val is true with proba p
         System.out.println(val);
 
 
@@ -427,6 +426,7 @@ public class Variables implements Cloneable{
         if(val){
             choice.BestCost = bestCost;
             choice.localChoiceBool = true;
+
             return  choice;
         }
         else{
@@ -436,11 +436,12 @@ public class Variables implements Cloneable{
             choice.localChoiceBool = false;
             choice.BestCost = choice.costFunction();
             return choice;*/
+            N.remove(choice);
             int randInd = random.nextInt(N.size());
-            choice = N.get(randInd);
-            choice.localChoiceBool = false;
-            choice.BestCost = choice.costFunction();
-            return choice;
+            Variables RandomChoice = N.get(randInd);
+            RandomChoice.localChoiceBool = false;
+            RandomChoice.BestCost = RandomChoice.costFunction();
+            return RandomChoice;
             //this.localChoiceBool = false;
             //this.BestCost = bestCost;
             //return this;

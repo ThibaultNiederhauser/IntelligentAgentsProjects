@@ -29,6 +29,8 @@ public class Centralized implements CentralizedBehavior {
     private Agent agent;
     private long timeout_setup;
     private long timeout_plan;
+    private final double p = 0.6;
+
 
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
@@ -61,34 +63,43 @@ public class Centralized implements CentralizedBehavior {
         int nT = tasks.size();
         int nV = vehicles.size();
         List<Variables> N;
+        Variables BestChoice = new Variables();
         Variables var = new Variables(vehicles, tasks);
-        double formerBestCost = Double.POSITIVE_INFINITY;
+        double AbsoluteBestCost = Double.POSITIVE_INFINITY;
         int NoImprovement = 0;
+        int NoLocalImp = 0;
         int i = 0;
 
         var.selectInitialSolution(vehicles);
-        while(NoImprovement < 10000) {
+        while(i < 5) {
             //System.out.println("Choose neighbours");
             N = var.chooseNeighbour();
             System.out.println("Neighbours chosen " + i);
-            var = var.LocalChoice(N);
-            if(var.BestCost >= formerBestCost){
+            var = var.LocalChoice(N, AbsoluteBestCost, p);
+            if(var.BestCost >= AbsoluteBestCost){
                 if(var.localChoiceBool){
-                    NoImprovement ++;
+                    NoImprovement++;
                 }
                 System.out.println("NO IMPROVMENT: " + NoImprovement);
             }
             else{
-                formerBestCost = var.BestCost;
+                AbsoluteBestCost = var.BestCost;
                 NoImprovement = 0;
+                BestChoice = var;
                 System.out.println("IMPROVMENT: ");
 
             }
             System.out.println("BEST COST " + var.BestCost);
-            System.out.println("FORMER COST " + formerBestCost);
-
-            i++;
+            System.out.println("Absolute COST " + AbsoluteBestCost);
+            if(NoImprovement > 1000){ //Go back to best choice
+                var = BestChoice;
+                NoImprovement = 0;
+                N = var.chooseNeighbour();
+                var = var.LocalChoice(N, AbsoluteBestCost, 1);
+                i++;
+            }
         }
+
         System.out.println("Loop over");
 
         List<Plan> SLSPlan = createPlan(var, vehicles, tasks);
