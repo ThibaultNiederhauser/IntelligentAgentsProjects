@@ -13,8 +13,9 @@ public class Variables implements Cloneable{
     private ArrayList<PUDTask> PUDTaskSet = new ArrayList<>();
     private List<Vehicle> vehicleList;
     public Double BestCost;
+    public boolean localChoiceBool;
 
-    private final double p = 0.5;
+    private final double p = 0.9;
 
     public Variables(){}
 
@@ -57,7 +58,47 @@ public class Variables implements Cloneable{
     }
 
     public void selectInitialSolution(List<Vehicle> vehicle_list){
-        Iterator<PUDTask> taskIterator = this.PUDTaskSet.iterator();
+        double dist;
+        double shortestDist;
+        PUDTask firstTask;
+        PUDTask tDeliver;
+        Vehicle candidate;
+        int i = 0;
+        for(PUDTask t:this.PUDTaskSet){
+            if(t.type == "deliver"){continue;}
+            shortestDist = Double.POSITIVE_INFINITY;
+            candidate = null;
+
+            for(Vehicle v:this.vehicleList){
+                dist = v.homeCity().distanceTo(t.task.pickupCity);
+                if(dist < shortestDist && t.task.weight < v.capacity()){
+                    shortestDist = dist;
+                    candidate = v;
+                }
+            }
+
+            if(candidate == null){
+                throw new AssertionError("Problem unsolvable!");
+            }
+
+            firstTask = this.nextTaskV.get(candidate);
+            tDeliver = getPUDTask(t.task, "deliver");
+            this.nextTaskV.put(candidate, t);
+            this.nextTaskT.put(t, tDeliver );
+            this.nextTaskT.put(tDeliver, firstTask);
+
+            //set vehicle
+            this.vehicle.put(t, candidate);
+            this.vehicle.put(tDeliver, candidate);
+
+        }
+        for(Vehicle v:this.vehicleList) {
+            this.updateTime(v);
+        }
+
+
+
+       /* Iterator<PUDTask> taskIterator = this.PUDTaskSet.iterator();
         //find vehicle with biggest capacity
         Vehicle biggestVehicle = vehicle_list.get(0);
         for(Vehicle v: vehicle_list){
@@ -86,7 +127,7 @@ public class Variables implements Cloneable{
             //set time
             this.time.put(t, (i+1));
             i++;
-        }
+        }*/
 
         this.BestCost = this.costFunction();
     }
@@ -119,7 +160,7 @@ public class Variables implements Cloneable{
                     continue;
                 }
 
-                if (t.task.weight <= v_j.capacity()) {
+                if (t.task.weight <= v_j.capacity()) { //TODO can remove this if
                     A = changingVehicle(oldA, v_i, v_j, t);
                     N.add(A);
                 }
@@ -130,7 +171,7 @@ public class Variables implements Cloneable{
         }
 
         //CHANGE task order of randomly chosen vehicle
-        v_i = this.vehicleList.get(rand.nextInt(this.vehicleList.size()));
+        //v_i = this.vehicleList.get(rand.nextInt(this.vehicleList.size()));
 
         int length = 0;
         t = oldA.nextTaskV.get(v_i);
@@ -143,7 +184,9 @@ public class Variables implements Cloneable{
             for (int tIdx1 = 1; tIdx1 < length; tIdx1++) { //idx start at 1
                 for (int tIdx2 = tIdx1 + 1; tIdx2 < length + 1; tIdx2++) {
                     A = changingTaskOrder(oldA, v_i, tIdx1, tIdx2);
-                    N.add(A);
+                    if(A !=null) {
+                        N.add(A);
+                    }
                 }
             }
         }
@@ -286,13 +329,13 @@ public class Variables implements Cloneable{
         PUDTask pickT = getPUDTask(t2.task, "pick");
         if(t2.type.equals("deliver")
                 && A.time.get(pickT) >= A.time.get(t1)){
-            return A;
+            return null;
         }
 
         PUDTask deliverT = getPUDTask(t1.task, "deliver");
         if(t1.type.equals("pick")
                 && A.time.get(deliverT) <= A.time.get(t2)){
-            return A;
+            return null;
         }
 
         //EXCHANGE 2 Tasks
@@ -317,7 +360,7 @@ public class Variables implements Cloneable{
 
         //CHECK weight ok
         if(!A1.check_weight(v)){
-            return A;
+            return null;
         }
 
         return A1;
@@ -345,26 +388,62 @@ public class Variables implements Cloneable{
 
     }
     public Variables LocalChoice(List<Variables> N){
-        Variables bestN = this;
+        ArrayList<Variables> bestN = new ArrayList<>();
+        bestN.add(this.copy());
+        ArrayList<Variables> improvN = new ArrayList<>();
+        improvN.add(this.copy());
+        Variables choice = null;
         double bestCost = this.BestCost;
         double currentCost = Double.POSITIVE_INFINITY;
         SplittableRandom random = new SplittableRandom();
 
         for(Variables var: N){
             currentCost = var.costFunction();
-            if(currentCost <= bestCost){
-                bestN = var;
+            if(currentCost < bestCost){
+                bestN.clear();
+                bestN.add(var);
                 bestCost = currentCost;
+                improvN.add(var);
+            }
+            if(currentCost == bestCost){
+                bestN.add(var);
+                improvN.add(var);
             }
         }
 
-        boolean val = random.nextInt(1, 101) < p*100; //val is true with proba p
-        if(val){
-            bestN.BestCost = bestCost;
-            return  bestN;
+        if(bestN.size() > 1){
+            choice = bestN.get(random.nextInt(bestN.size()));
         }
         else{
-            return this;
+            choice = bestN.get(0);
+        }
+
+        boolean val = random.nextInt(1, 101) < p*100; //val is true with proba p
+        System.out.println(val);
+
+
+        //boolean numb = true;
+        //numb = bestN.nextTaskV.equals(this.nextTaskT);
+        if(val){
+            choice.BestCost = bestCost;
+            choice.localChoiceBool = true;
+            return  choice;
+        }
+        else{
+
+            /*int randInd = random.nextInt(improvN.size());
+            choice = improvN.get(randInd);
+            choice.localChoiceBool = false;
+            choice.BestCost = choice.costFunction();
+            return choice;*/
+            int randInd = random.nextInt(N.size());
+            choice = N.get(randInd);
+            choice.localChoiceBool = false;
+            choice.BestCost = choice.costFunction();
+            return choice;
+            //this.localChoiceBool = false;
+            //this.BestCost = bestCost;
+            //return this;
         }
     }
 

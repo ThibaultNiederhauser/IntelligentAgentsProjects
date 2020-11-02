@@ -70,10 +70,12 @@ public class Centralized implements CentralizedBehavior {
         while(NoImprovement < 10000) {
             //System.out.println("Choose neighbours");
             N = var.chooseNeighbour();
-            //System.out.println("Neighbours chosen " + i);
+            System.out.println("Neighbours chosen " + i);
             var = var.LocalChoice(N);
             if(var.BestCost >= formerBestCost){
-                NoImprovement ++;
+                if(var.localChoiceBool){
+                    NoImprovement ++;
+                }
                 System.out.println("NO IMPROVMENT: " + NoImprovement);
             }
             else{
