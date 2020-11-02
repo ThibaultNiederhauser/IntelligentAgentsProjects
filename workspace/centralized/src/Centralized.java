@@ -80,6 +80,7 @@ public class Centralized implements CentralizedBehavior {
             }
             else{
                 formerBestCost = var.BestCost;
+                NoImprovement = 0;
             }
             System.out.println("BEST COST " + var.BestCost);
             System.out.println("FORMER COST " + formerBestCost);
