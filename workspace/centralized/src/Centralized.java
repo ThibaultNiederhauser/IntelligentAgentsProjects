@@ -66,11 +66,11 @@ public class Centralized implements CentralizedBehavior {
         int NoImprovement = 0;
         int i = 0;
 
-        var.selectInitialSolution(vehicles, tasks);
-        while(NoImprovement < 1000) { //TODO better stopping criteria
-            //System.out.println("Choose neighbours");
+        var.selectInitialSolution(vehicles);
+        while(NoImprovement < 1000) {
+            System.out.println("Choose neighbours");
             N = var.chooseNeighbour(vehicles); //TODO no need to pass vehicles?
-            //System.out.println("Neighbours chosen " + i);
+            System.out.println("Neighbours chosen " + i);
 
 
             var = var.LocalChoice(N, tasks, vehicles); //TODO change fct with "this" and add N to variables?
@@ -120,7 +120,7 @@ public class Centralized implements CentralizedBehavior {
 
     private List<Plan> createPlan(Variables A, List<Vehicle> vehicles, TaskSet tasks){
         ArrayList<Plan> multiVPlan = new ArrayList<>();
-        Task t;
+        PUDTask t;
         City current;
         Plan plan;
 
@@ -131,22 +131,23 @@ public class Centralized implements CentralizedBehavior {
             t = A.nextTaskV.get(v);
             while(t != null){
                 // move: current city => pickup location
-                for (City city : current.pathTo(t.pickupCity)) {
-                    plan.appendMove(city);
+                if(t.type.equals("pick")){
+                    for (City city : current.pathTo(t.task.pickupCity)) {
+                        plan.appendMove(city);
+                    }
+                    plan.appendPickup(t.task);
+                    current = t.task.pickupCity;
                 }
 
-                plan.appendPickup(t);
-
-                // move: pickup location => delivery location
-                for (City city : t.path()) {
-                    plan.appendMove(city);
+                if(t.type.equals("deliver")){
+                    for (City city : current.pathTo(t.task.deliveryCity)) {
+                        plan.appendMove(city);
+                    }
+                    plan.appendDelivery(t.task);
+                    current = t.task.deliveryCity;
                 }
-
-                plan.appendDelivery(t);
 
                 // set current city
-                current = t.deliveryCity;
-
                 t = A.nextTaskT.get(t);
             }
 
