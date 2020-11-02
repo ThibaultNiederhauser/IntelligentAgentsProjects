@@ -14,7 +14,7 @@ public class Variables implements Cloneable{
     private ArrayList<PUDTask> PUDTaskSet = new ArrayList<>();
     public Double BestCost;
 
-    private final double p = 0.9;
+    private final double p = 0.5;
 
     public Variables(){}
 
@@ -413,11 +413,11 @@ public class Variables implements Cloneable{
 
             while(t != null){
                 if(t.type.equals("pick")){
-                    dist += current_city.distanceUnitsTo(t.task.pickupCity);
+                    dist += current_city.distanceTo(t.task.pickupCity);
                     current_city = t.task.pickupCity;
                 }
                 else{
-                    dist += current_city.distanceUnitsTo(t.task.deliveryCity);
+                    dist += current_city.distanceTo(t.task.deliveryCity);
                     current_city = t.task.deliveryCity;
                 }
                 t = var.nextTaskT.get(t);
