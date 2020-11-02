@@ -291,13 +291,13 @@ public class Variables implements Cloneable{
 
         PUDTask pickT = getPUDTask(t2.task, "pick");
         if(t2.type.equals("deliver")
-                && A.time.get(pickT) > A.time.get(t1)){
+                && A.time.get(pickT) >= A.time.get(t1)){
             return A;
         }
 
         PUDTask deliverT = getPUDTask(t1.task, "deliver");
         if(t1.type.equals("pick")
-                && A.time.get(deliverT) < A.time.get(t2)){
+                && A.time.get(deliverT) <= A.time.get(t2)){
             return A;
         }
 
@@ -327,8 +327,9 @@ public class Variables implements Cloneable{
         A1.updateTime(v);
 
         //CHECK weight ok
-        if(A1.check_weight(v)){return A;}
-
+        if(!A1.check_weight(v)){
+            return A;
+        }
 
         return A1;
     }
