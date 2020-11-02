@@ -29,11 +29,11 @@ public class Centralized implements CentralizedBehavior {
     private Agent agent;
     private long timeout_setup;
     private long timeout_plan;
-    
+
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
-            Agent agent) {
-        
+                      Agent agent) {
+
         // this code is used to get the timeouts
         LogistSettings ls = null;
         try {
@@ -42,12 +42,12 @@ public class Centralized implements CentralizedBehavior {
         catch (Exception exc) {
             System.out.println("There was a problem loading the configuration file.");
         }
-        
+
         // the setup method cannot last more than timeout_setup milliseconds
         timeout_setup = ls.get(LogistSettings.TimeoutKey.SETUP);
         // the plan method cannot execute more than timeout_plan milliseconds
         timeout_plan = ls.get(LogistSettings.TimeoutKey.PLAN);
-        
+
         this.topology = topology;
         this.distribution = distribution;
         this.agent = agent;
@@ -67,13 +67,11 @@ public class Centralized implements CentralizedBehavior {
         int i = 0;
 
         var.selectInitialSolution(vehicles);
-        while(NoImprovement < 1000) {
-            System.out.println("Choose neighbours");
-            N = var.chooseNeighbour(vehicles); //TODO no need to pass vehicles?
-            System.out.println("Neighbours chosen " + i);
-
-
-            var = var.LocalChoice(N, tasks, vehicles); //TODO change fct with "this" and add N to variables?
+        while(NoImprovement < 10000) {
+            //System.out.println("Choose neighbours");
+            N = var.chooseNeighbour();
+            //System.out.println("Neighbours chosen " + i);
+            var = var.LocalChoice(N);
             if(var.BestCost >= formerBestCost){
                 NoImprovement ++;
                 System.out.println("NO IMPROVMENT: " + NoImprovement);
@@ -81,6 +79,8 @@ public class Centralized implements CentralizedBehavior {
             else{
                 formerBestCost = var.BestCost;
                 NoImprovement = 0;
+                System.out.println("IMPROVMENT: ");
+
             }
             System.out.println("BEST COST " + var.BestCost);
             System.out.println("FORMER COST " + formerBestCost);
@@ -152,7 +152,7 @@ public class Centralized implements CentralizedBehavior {
                 t = A.nextTaskT.get(t);
             }
 
-        multiVPlan.add(plan);
+            multiVPlan.add(plan);
 
         }
         return multiVPlan;
@@ -164,4 +164,3 @@ public class Centralized implements CentralizedBehavior {
     }*/
 
 }
-

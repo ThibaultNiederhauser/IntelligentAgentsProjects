@@ -1,7 +1,6 @@
 import logist.task.Task;
 import logist.simulation.Vehicle;
 import logist.task.TaskSet;
-import logist.topology.Topology;
 import logist.topology.Topology.City;
 
 import java.util.*;
@@ -12,6 +11,7 @@ public class Variables implements Cloneable{
     public HashMap<PUDTask, Integer> time = new HashMap<>();
     public HashMap<PUDTask, Vehicle> vehicle = new HashMap<>();
     private ArrayList<PUDTask> PUDTaskSet = new ArrayList<>();
+    private List<Vehicle> vehicleList;
     public Double BestCost;
 
     private final double p = 0.5;
@@ -23,6 +23,7 @@ public class Variables implements Cloneable{
         initNextTask(vehicles);
         initVehicle();
         initTime();
+        this.vehicleList = vehicles;
     }
 
     private void initPUDTaskSet(TaskSet tasks){
@@ -87,10 +88,10 @@ public class Variables implements Cloneable{
             i++;
         }
 
-        this.BestCost = costFunction(this, vehicle_list);
+        this.BestCost = this.costFunction();
     }
 
-    public List<Variables> chooseNeighbour(List<Vehicle> vehicle_list) {
+    public List<Variables> chooseNeighbour() {
         Random rand = new Random();
         Variables oldA = this;
         Variables A;
@@ -98,44 +99,39 @@ public class Variables implements Cloneable{
         PUDTask t = null;
 
         //select changing vehicule
-        Vehicle v_i = vehicle_list.get(rand.nextInt(vehicle_list.size()));
+        Vehicle v_i = this.vehicleList.get(rand.nextInt(this.vehicleList.size()));
 
         while(oldA.nextTaskV.get(v_i) == null) {
-            v_i = vehicle_list.get(rand.nextInt(vehicle_list.size()));
+            v_i = this.vehicleList.get(rand.nextInt(this.vehicleList.size()));
         }
 
 
         //CHANGE vehicle
-        for (Vehicle v_j : vehicle_list) {
-
+        for (Vehicle v_j : this.vehicleList) {
             if (v_j.equals(v_i)) {
                 continue;
             }
             t = oldA.nextTaskV.get(v_i);
-            //if(t == null){continue;} //never happens
 
-            while(t!=null) {
-
-
-
-                if(t.type.equals("deliver")){
+            while (t != null) {
+                if (t.type.equals("deliver")) {
                     t = oldA.nextTaskT.get(t);
                     continue;
                 }
 
                 if (t.task.weight <= v_j.capacity()) {
                     A = changingVehicle(oldA, v_i, v_j, t);
-
                     N.add(A);
                 }
 
                 t = oldA.nextTaskT.get(t);
             }
 
-
         }
 
         //CHANGE task order of randomly chosen vehicle
+        v_i = this.vehicleList.get(rand.nextInt(this.vehicleList.size()));
+
         int length = 0;
         t = oldA.nextTaskV.get(v_i);
         //if(t == null){continue;}
@@ -144,7 +140,6 @@ public class Variables implements Cloneable{
             length++;
         }
         if (length >= 2) {
-
             for (int tIdx1 = 1; tIdx1 < length; tIdx1++) { //idx start at 1
                 for (int tIdx2 = tIdx1 + 1; tIdx2 < length + 1; tIdx2++) {
                     A = changingTaskOrder(oldA, v_i, tIdx1, tIdx2);
@@ -152,7 +147,6 @@ public class Variables implements Cloneable{
                 }
             }
         }
-
 
         return N;
     }
@@ -167,6 +161,7 @@ public class Variables implements Cloneable{
         A_copy.nextTaskT = (HashMap<PUDTask, PUDTask>) this.nextTaskT.clone();
         A_copy.PUDTaskSet = this.PUDTaskSet;
         A_copy.BestCost = this.BestCost;
+        A_copy.vehicleList = this.vehicleList;
 
         return A_copy;
     }
@@ -220,12 +215,11 @@ public class Variables implements Cloneable{
         }
 
         //add t at beginning of v2
-
         A1.nextTaskT.put(tDeliver, A1.nextTaskV.get(v2));
         A1.nextTaskT.put(t, tDeliver);
         A1.nextTaskV.put(v2, t);
         A1.updateTime(v1);
-        A1.updateTime(v2); //TODO check if A1 is modified correctly
+        A1.updateTime(v2);
         A1.vehicle.put(t, v2);
         A1.vehicle.put(tDeliver, v2);
 
@@ -262,7 +256,7 @@ public class Variables implements Cloneable{
     }
     private Variables changingTaskOrder(Variables A, Vehicle v, int tIdx1, int tIdx2){
         Variables A1 = A.copy();
-        PUDTask tPre1 = null; //A1.nextTaskV.get(v); //TODO check if correct
+        PUDTask tPre1 = null;
         PUDTask t1 = A1.nextTaskV.get(v);
 
         int count = 1;
@@ -278,7 +272,7 @@ public class Variables implements Cloneable{
         PUDTask t2 = A1.nextTaskT.get(tPre2);
         count++;
 
-        while(count < tIdx2){ //TODO function for the while loop (comes twice), optional
+        while(count < tIdx2){
             tPre2 = t2;
             t2 = A1.nextTaskT.get(t2);
             count++;
@@ -302,24 +296,19 @@ public class Variables implements Cloneable{
         }
 
         //EXCHANGE 2 Tasks
-        if(tPost1 != null && tPost1.equals(t2)){
-            if(tPre1 != null){
-                A1.nextTaskT.put(tPre1, t2);
-            }
-            else{
-                A1.nextTaskV.put(v, t2); //TODO take out of if
-            }
-           A1.nextTaskT.put(t2, t1);
-           A1.nextTaskT.put(t1, tPost2);
+        if(tPre1 != null){
+            A1.nextTaskT.put(tPre1, t2);
         }
         else{
-            if(tPre1 != null) {
-                A1.nextTaskT.put(tPre1, t2);
-            }
-            else{
-                A1.nextTaskV.put(v, t2); //if t2 needs to be moved if first pos
-            }
+            A1.nextTaskV.put(v, t2);
+        }
 
+        if(tPost1 != null && tPost1.equals(t2)){
+
+            A1.nextTaskT.put(t2, t1);
+            A1.nextTaskT.put(t1, tPost2);
+        }
+        else{
             A1.nextTaskT.put(tPre2, t1);
             A1.nextTaskT.put(t2, tPost1);
             A1.nextTaskT.put(t1, tPost2);
@@ -355,16 +344,16 @@ public class Variables implements Cloneable{
         return true;
 
     }
-    public Variables LocalChoice(List<Variables> N, TaskSet tasks, List<Vehicle> vehicle_list){
+    public Variables LocalChoice(List<Variables> N){
         Variables bestN = this;
         double bestCost = this.BestCost;
         double currentCost = Double.POSITIVE_INFINITY;
         SplittableRandom random = new SplittableRandom();
 
         for(Variables var: N){
-            currentCost = costFunction(var, vehicle_list);
+            currentCost = var.costFunction();
             if(currentCost <= bestCost){
-                bestN = var.copy();
+                bestN = var;
                 bestCost = currentCost;
             }
         }
@@ -379,7 +368,7 @@ public class Variables implements Cloneable{
         }
     }
 
-    private Double costFunction(Variables var, List<Vehicle> vehicles_list){
+    private Double costFunction(){
         double c = 0;
         //double dist_btw;
         double dist;
@@ -388,29 +377,14 @@ public class Variables implements Cloneable{
         double total_dist = 0;
         City current_city;
 
-        /*for(PUDTask t : this.PUDTaskSet){
-            if(var.nextTaskT.get(t) == null){continue;}
-            if(t.type.equals("pick")){
-                dist =
-            }
 
-
-
-            dist_btw = t.deliveryCity.distanceTo(var.nextTaskT.get(t).pickupCity);
-            task_length = var.nextTaskT.get(t).pickupCity
-                    .distanceTo(var.nextTaskT.get(t).deliveryCity);
-            costPerK = var.vehicle.get(t).costPerKm();
-            total_dist = total_dist + dist_btw + task_length;
-            c = c + (dist_btw + task_length) * costPerK;
-        }*/
-
-        for(Vehicle v : vehicles_list){
+        for(Vehicle v : this.vehicleList){
             dist = 0;
-            PUDTask t = var.nextTaskV.get(v);
+            PUDTask t = this.nextTaskV.get(v);
             if(t == null){continue;}
             dist += t.task.pickupCity.distanceTo(v.homeCity()); //from home to first pick-up
             current_city = t.task.pickupCity;
-            t = var.nextTaskT.get(t);
+            t = this.nextTaskT.get(t);
 
             while(t != null){
                 if(t.type.equals("pick")){
@@ -421,7 +395,7 @@ public class Variables implements Cloneable{
                     dist += current_city.distanceTo(t.task.deliveryCity);
                     current_city = t.task.deliveryCity;
                 }
-                t = var.nextTaskT.get(t);
+                t = this.nextTaskT.get(t);
 
             }
 
