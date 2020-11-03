@@ -26,7 +26,6 @@ public class Centralized implements CentralizedBehavior {
     private double timeout_planLook;
     private double timeout_planDig;
     private double prob;
-    private int digIter;
     private int lookIter;
 
     @Override
@@ -48,7 +47,6 @@ public class Centralized implements CentralizedBehavior {
         this.agent = agent;
         this.prob =  Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
         this.lookIter =  Integer.parseInt(this.agent.readProperty("lookIter", String.class, "10000"));
-        this.digIter =  Integer.parseInt(this.agent.readProperty("digIter", String.class, "10"));
     }
 
     @Override
@@ -66,7 +64,7 @@ public class Centralized implements CentralizedBehavior {
         //Dig more best choice
 
         long time_dig = System.currentTimeMillis();
-        var = SLS(var, 1., this.digIter, time_dig, this.timeout_planDig, var.BestCost);
+        var = SLS(var, 1., 1, time_dig, this.timeout_planDig, var.BestCost);
 
         // output result and return plan
 
@@ -78,7 +76,7 @@ public class Centralized implements CentralizedBehavior {
 
     private void verboseOut(double bestCost, long time_start){
         System.out.println("----RESULT----");
-        System.out.println("Params: \niter:\t"+ this.lookIter + "\niter2:\t" + this.digIter + "\np:\t" + this.prob);
+        System.out.println("Params: \niter:\t"+ this.lookIter + "\np:\t" + this.prob);
         double elapsed_time = (System.currentTimeMillis() - time_start)/1000.;
         System.out.println("Time (s):\t"+ elapsed_time);
         System.out.println("Cost:\t" + bestCost);

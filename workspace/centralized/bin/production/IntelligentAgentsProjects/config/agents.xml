@@ -9,12 +9,19 @@
 		<set class-name="template.CentralizedTemplate"/>
 	</agent>
 
-	<agent name="centralized-SLS">
+	<agent name="centralized-sls">
 		<set class-path="bin/"/>
 		<set class-name="Centralized"/>
 		<set prob="0.8"/>
 		<set lookIter="5000"/>
-		<set digIter="50"/>
+
+	</agent>
+
+	<agent name="centralized-main">
+		<set class-path="bin/"/>
+		<set class-name="Centralized"/>
+		<set prob="0.8"/>
+		<set lookIter="5000"/>
 
 	</agent>
 	

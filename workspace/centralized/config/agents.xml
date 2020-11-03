@@ -14,7 +14,6 @@
 		<set class-name="Centralized"/>
 		<set prob="0.8"/>
 		<set lookIter="5000"/>
-		<set digIter="50"/>
 
 	</agent>
 
@@ -23,7 +22,6 @@
 		<set class-name="Centralized"/>
 		<set prob="0.8"/>
 		<set lookIter="5000"/>
-		<set digIter="50"/>
 
 	</agent>
 	
