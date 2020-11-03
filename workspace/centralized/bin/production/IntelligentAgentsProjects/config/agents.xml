@@ -12,6 +12,7 @@
 	<agent name="centralized-SLS">
 		<set class-path="bin/"/>
 		<set class-name="Centralized"/>
+		<set prob="0.4"/>
 	</agent>
 	
 </agents>

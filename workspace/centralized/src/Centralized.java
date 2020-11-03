@@ -25,6 +25,7 @@ public class Centralized implements CentralizedBehavior {
     private Agent agent;
     private double timeout_planLook;
     private double timeout_planDig;
+    private double prob;
 
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
@@ -45,6 +46,7 @@ public class Centralized implements CentralizedBehavior {
         this.timeout_planLook = ls.get(LogistSettings.TimeoutKey.PLAN) * 0.95;
         this.timeout_planDig = ls.get(LogistSettings.TimeoutKey.PLAN) * 0.05;
         this.agent = agent;
+        this.prob =  Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
     }
 
     @Override
@@ -68,8 +70,7 @@ public class Centralized implements CentralizedBehavior {
             //System.out.println("Choose neighbours");
             N = var.chooseNeighbour();
             System.out.println("Proposed " + N.size() + " neighbors");
-            double p = 0.4;
-            var = var.LocalChoice(N, AbsoluteBestCost, p);
+            var = var.LocalChoice(N, AbsoluteBestCost, this.prob);
             if (var.BestCost >= AbsoluteBestCost) {
                 if (var.localChoiceBool) {
                     NoImprovement++;
@@ -80,11 +81,11 @@ public class Centralized implements CentralizedBehavior {
                 NoImprovement = 0;
                 BestChoice = var;
                 System.out.println("IMPROVEMENT: ");
-
             }
             System.out.println("BEST COST " + var.BestCost);
             System.out.println("Absolute COST " + AbsoluteBestCost);
         }
+
         //Dig best choice
 
         long time_startDig = System.currentTimeMillis();
@@ -110,13 +111,6 @@ public class Centralized implements CentralizedBehavior {
 
             System.out.println("BEST COST " + var.BestCost);
             System.out.println("Absolute COST " + AbsoluteBestCost);
-            //if(NoImprovement > 1000){ //Go back to best choice
-            //    var = BestChoice;
-            //   NoImprovement = 0;
-            //  N = var.chooseNeighbour();
-            // var = var.LocalChoice(N, AbsoluteBestCost, 1);
-            // i++;
-            // }
         }
         var = BestChoice;
 
