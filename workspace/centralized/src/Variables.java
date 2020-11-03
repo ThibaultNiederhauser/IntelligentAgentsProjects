@@ -167,7 +167,6 @@ public class Variables implements Cloneable {
             }
 
             t = oldA.nextTaskT.get(t);
-            //}
 
         }
 

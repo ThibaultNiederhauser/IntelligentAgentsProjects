@@ -22,13 +22,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Centralized implements CentralizedBehavior {
 
-    private Topology topology;
-    private TaskDistribution distribution;
     private Agent agent;
-    private long timeout_setup;
-    private long timeout_plan;
-    private final double p = 0.4;
-
+    private double timeout_planLook;
+    private double timeout_planDig;
 
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
@@ -43,12 +39,11 @@ public class Centralized implements CentralizedBehavior {
         }
 
         // the setup method cannot last more than timeout_setup milliseconds
-        timeout_setup = ls.get(LogistSettings.TimeoutKey.SETUP);
+        // this.timeout_setup = ls.get(LogistSettings.TimeoutKey.SETUP);
         // the plan method cannot execute more than timeout_plan milliseconds
-        timeout_plan = ls.get(LogistSettings.TimeoutKey.PLAN);
-
-        this.topology = topology;
-        this.distribution = distribution;
+        assert ls != null;
+        this.timeout_planLook = ls.get(LogistSettings.TimeoutKey.PLAN) * 0.95;
+        this.timeout_planDig = ls.get(LogistSettings.TimeoutKey.PLAN) * 0.05;
         this.agent = agent;
     }
 
@@ -68,51 +63,49 @@ public class Centralized implements CentralizedBehavior {
         int i = 0;
 
         var.selectInitialSolution(vehicles);
-        while (NoImprovement < 10000) {
+        while (NoImprovement < 10000 &&
+                checkTimeConstraint(time_start, this.timeout_planLook)) {
             //System.out.println("Choose neighbours");
             N = var.chooseNeighbour();
-            System.out.println("Neighbours chosen " + i);
+            System.out.println("Proposed " + N.size() + " neighbors");
+            double p = 0.4;
             var = var.LocalChoice(N, AbsoluteBestCost, p);
             if (var.BestCost >= AbsoluteBestCost) {
                 if (var.localChoiceBool) {
                     NoImprovement++;
                 }
-                System.out.println("NO IMPROVMENT: " + NoImprovement);
+                System.out.println("NO IMPROVEMENT: " + NoImprovement);
             } else {
                 AbsoluteBestCost = var.BestCost;
                 NoImprovement = 0;
                 BestChoice = var;
-                System.out.println("IMPROVMENT: ");
+                System.out.println("IMPROVEMENT: ");
 
             }
             System.out.println("BEST COST " + var.BestCost);
             System.out.println("Absolute COST " + AbsoluteBestCost);
-            //if(NoImprovement > 1000){ //Go back to best choice
-            //    var = BestChoice;
-            //   NoImprovement = 0;
-            //  N = var.chooseNeighbour();
-            // var = var.LocalChoice(N, AbsoluteBestCost, 1);
-            // i++;
-            // }
         }
         //Dig best choice
+
+        long time_startDig = System.currentTimeMillis();
         var = BestChoice;
         NoImprovement = 0;
-        while (NoImprovement < 10) {
-            //System.out.println("Choose neighbours");
+        while (NoImprovement < 10 &&
+                checkTimeConstraint(time_start, this.timeout_planDig)) {
+
             N = var.chooseNeighbour();
-            System.out.println("Neighbours chosen " + i);
+            System.out.println("Proposed " + N.size() + " neighbors");
             var = var.LocalChoice(N, AbsoluteBestCost, 1);
             if (var.BestCost >= AbsoluteBestCost) {
                 if (var.localChoiceBool) {
                     NoImprovement++;
                 }
-                System.out.println("NO IMPROVMENT: " + NoImprovement);
+                System.out.println("NO IMPROVEMENT: " + NoImprovement);
             } else {
                 AbsoluteBestCost = var.BestCost;
                 NoImprovement = 0;
                 BestChoice = var;
-                System.out.println("IMPROVMENT: ");
+                System.out.println("IMPROVEMENT: ");
             }
 
             System.out.println("BEST COST " + var.BestCost);
@@ -173,6 +166,10 @@ public class Centralized implements CentralizedBehavior {
 
         }
         return multiVPlan;
+    }
+
+    boolean checkTimeConstraint(long time_start, double timeConstraint) {
+        return System.currentTimeMillis() - time_start < timeConstraint;
     }
 
     /*private Plan SLSPlan(Vehicle vehicle, TaskSet tasks, Variables var) {
