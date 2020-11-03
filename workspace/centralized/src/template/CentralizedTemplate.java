@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * A very simple auction agent that assigns all tasks to its first vehicle and
  * handles them sequentially.
- *
  */
 @SuppressWarnings("unused")
 public class CentralizedTemplate implements CentralizedBehavior {
@@ -31,25 +30,24 @@ public class CentralizedTemplate implements CentralizedBehavior {
     private Agent agent;
     private long timeout_setup;
     private long timeout_plan;
-    
+
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
-            Agent agent) {
-        
+                      Agent agent) {
+
         // this code is used to get the timeouts
         LogistSettings ls = null;
         try {
             ls = Parsers.parseSettings("config" + File.separator + "settings_default.xml");
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             System.out.println("There was a problem loading the configuration file.");
         }
-        
+
         // the setup method cannot last more than timeout_setup milliseconds
         timeout_setup = ls.get(LogistSettings.TimeoutKey.SETUP);
         // the plan method cannot execute more than timeout_plan milliseconds
         timeout_plan = ls.get(LogistSettings.TimeoutKey.PLAN);
-        
+
         this.topology = topology;
         this.distribution = distribution;
         this.agent = agent;
@@ -58,7 +56,7 @@ public class CentralizedTemplate implements CentralizedBehavior {
     @Override
     public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
         long time_start = System.currentTimeMillis();
-        
+
 //		System.out.println("Agent " + agent.id() + " has tasks " + tasks);
         Plan planVehicle1 = naivePlan(vehicles.get(0), tasks);
 
@@ -67,11 +65,11 @@ public class CentralizedTemplate implements CentralizedBehavior {
         while (plans.size() < vehicles.size()) {
             plans.add(Plan.EMPTY);
         }
-        
+
         long time_end = System.currentTimeMillis();
         long duration = time_end - time_start;
         System.out.println("The plan was generated in " + duration + " milliseconds.");
-        
+
         return plans;
     }
 

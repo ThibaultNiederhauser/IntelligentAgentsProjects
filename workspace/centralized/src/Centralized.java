@@ -6,7 +6,6 @@ import logist.behavior.CentralizedBehavior;
 import logist.config.Parsers;
 import logist.plan.Plan;
 import logist.simulation.Vehicle;
-import logist.task.Task;
 import logist.task.TaskDistribution;
 import logist.task.TaskSet;
 import logist.topology.Topology;
@@ -19,7 +18,6 @@ import java.util.List;
 /**
  * A very simple auction agent that assigns all tasks to its first vehicle and
  * handles them sequentially.
- *
  */
 @SuppressWarnings("unused")
 public class Centralized implements CentralizedBehavior {
@@ -40,8 +38,7 @@ public class Centralized implements CentralizedBehavior {
         LogistSettings ls = null;
         try {
             ls = Parsers.parseSettings("config" + File.separator + "settings_default.xml");
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             System.out.println("There was a problem loading the configuration file.");
         }
 
@@ -71,18 +68,17 @@ public class Centralized implements CentralizedBehavior {
         int i = 0;
 
         var.selectInitialSolution(vehicles);
-        while(NoImprovement < 10000) {
+        while (NoImprovement < 10000) {
             //System.out.println("Choose neighbours");
             N = var.chooseNeighbour();
             System.out.println("Neighbours chosen " + i);
             var = var.LocalChoice(N, AbsoluteBestCost, p);
-            if(var.BestCost >= AbsoluteBestCost){
-                if(var.localChoiceBool){
+            if (var.BestCost >= AbsoluteBestCost) {
+                if (var.localChoiceBool) {
                     NoImprovement++;
                 }
                 System.out.println("NO IMPROVMENT: " + NoImprovement);
-            }
-            else{
+            } else {
                 AbsoluteBestCost = var.BestCost;
                 NoImprovement = 0;
                 BestChoice = var;
@@ -93,27 +89,26 @@ public class Centralized implements CentralizedBehavior {
             System.out.println("Absolute COST " + AbsoluteBestCost);
             //if(NoImprovement > 1000){ //Go back to best choice
             //    var = BestChoice;
-             //   NoImprovement = 0;
-              //  N = var.chooseNeighbour();
-               // var = var.LocalChoice(N, AbsoluteBestCost, 1);
-               // i++;
-           // }
+            //   NoImprovement = 0;
+            //  N = var.chooseNeighbour();
+            // var = var.LocalChoice(N, AbsoluteBestCost, 1);
+            // i++;
+            // }
         }
         //Dig best choice
         var = BestChoice;
         NoImprovement = 0;
-        while(NoImprovement < 10) {
+        while (NoImprovement < 10) {
             //System.out.println("Choose neighbours");
             N = var.chooseNeighbour();
             System.out.println("Neighbours chosen " + i);
             var = var.LocalChoice(N, AbsoluteBestCost, 1);
-            if(var.BestCost >= AbsoluteBestCost){
-                if(var.localChoiceBool){
+            if (var.BestCost >= AbsoluteBestCost) {
+                if (var.localChoiceBool) {
                     NoImprovement++;
                 }
                 System.out.println("NO IMPROVMENT: " + NoImprovement);
-            }
-            else{
+            } else {
                 AbsoluteBestCost = var.BestCost;
                 NoImprovement = 0;
                 BestChoice = var;
@@ -141,20 +136,20 @@ public class Centralized implements CentralizedBehavior {
     }
 
 
-    private List<Plan> createPlan(Variables A, List<Vehicle> vehicles, TaskSet tasks){
+    private List<Plan> createPlan(Variables A, List<Vehicle> vehicles, TaskSet tasks) {
         ArrayList<Plan> multiVPlan = new ArrayList<>();
         PUDTask t;
         City current;
         Plan plan;
 
-        for(Vehicle v:vehicles){
+        for (Vehicle v : vehicles) {
             current = v.getCurrentCity();
             plan = new Plan(current);
 
             t = A.nextTaskV.get(v);
-            while(t != null){
+            while (t != null) {
                 // move: current city => pickup location
-                if(t.type.equals("pick")){
+                if (t.type.equals("pick")) {
                     for (City city : current.pathTo(t.task.pickupCity)) {
                         plan.appendMove(city);
                     }
@@ -162,7 +157,7 @@ public class Centralized implements CentralizedBehavior {
                     current = t.task.pickupCity;
                 }
 
-                if(t.type.equals("deliver")){
+                if (t.type.equals("deliver")) {
                     for (City city : current.pathTo(t.task.deliveryCity)) {
                         plan.appendMove(city);
                     }
