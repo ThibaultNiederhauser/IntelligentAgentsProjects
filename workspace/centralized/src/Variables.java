@@ -98,38 +98,6 @@ public class Variables implements Cloneable {
             this.updateTime(v);
         }
 
-
-
-       /* Iterator<PUDTask> taskIterator = this.PUDTaskSet.iterator();
-        //find vehicle with biggest capacity
-        Vehicle biggestVehicle = vehicle_list.get(0);
-        for(Vehicle v: vehicle_list){
-            if(v.capacity() > biggestVehicle.capacity()){
-                biggestVehicle = v;
-            }
-        }
-
-        //set variables
-        if(taskIterator.hasNext()){
-            this.nextTaskV.put(biggestVehicle, taskIterator.next()); //set nextTask(vk)}
-        }
-        int i = 0;
-        for(PUDTask t: this.PUDTaskSet){
-            if(t.task.weight > biggestVehicle.capacity()) {throw new AssertionError
-                    ("Problem unsolvable!");}
-
-            //set nextTask(ti)
-            if(taskIterator.hasNext()) {
-                this.nextTaskT.put(t, taskIterator.next());
-            }
-
-            //set vehicle
-            this.vehicle.put(t, biggestVehicle);
-
-            //set time
-            this.time.put(t, (i+1));
-            i++;
-        }*/
         this.BestCost = this.costFunction();
     }
 
@@ -140,7 +108,7 @@ public class Variables implements Cloneable {
         List<Variables> N = new ArrayList<>();
         PUDTask t = null;
 
-        //select changing vehicule
+        //select changing vehicle
         Vehicle v_i = this.vehicleList.get(rand.nextInt(this.vehicleList.size()));
 
         while (oldA.nextTaskV.get(v_i) == null) {
@@ -155,7 +123,6 @@ public class Variables implements Cloneable {
             }
             t = oldA.nextTaskV.get(v_i);
 
-            //while (t != null) {
             if (t.type.equals("deliver")) {
                 t = oldA.nextTaskT.get(t);
                 continue;
@@ -175,7 +142,7 @@ public class Variables implements Cloneable {
 
         int length = 0;
         t = oldA.nextTaskV.get(v_i);
-        //if(t == null){continue;}
+
         while (t != null) {
             t = oldA.nextTaskT.get(t);
             length++;
@@ -195,7 +162,7 @@ public class Variables implements Cloneable {
     }
 
 
-    private Variables copy() {
+    public Variables copy() {
         Variables A_copy = new Variables();
         A_copy.time = (HashMap<PUDTask, Integer>) this.time.clone();
         A_copy.vehicle = (HashMap<PUDTask, Vehicle>) this.vehicle.clone();
@@ -234,9 +201,6 @@ public class Variables implements Cloneable {
         }
 
         PUDTask tPostDeliver = A1.nextTaskT.get(tDeliver);
-
-
-        //Task t = A.nextTaskV.get(v1);
 
         //remove task t from v1:
 
@@ -384,7 +348,7 @@ public class Variables implements Cloneable {
 
     }
 
-    public Variables LocalChoice(List<Variables> N, double AbsoluteBest, double p) {
+    public Variables LocalChoice(List<Variables> N, double p) {
         ArrayList<Variables> bestN = new ArrayList<>();
         bestN.add(this.copy());
         ArrayList<Variables> improvN = new ArrayList<>();
@@ -427,31 +391,18 @@ public class Variables implements Cloneable {
 
             return choice;
         } else {
-
-            /*int randInd = random.nextInt(improvN.size());
-            choice = improvN.get(randInd);
-            choice.localChoiceBool = false;
-            choice.BestCost = choice.costFunction();
-            return choice;*/
-            N.remove(choice);
+            if(N.size() > 1){N.remove(choice);}
             int randInd = random.nextInt(N.size());
             Variables RandomChoice = N.get(randInd);
             RandomChoice.localChoiceBool = false;
             RandomChoice.BestCost = RandomChoice.costFunction();
             return RandomChoice;
-            //this.localChoiceBool = false;
-            //this.BestCost = bestCost;
-            //return this;
         }
     }
 
     private Double costFunction() {
         double c = 0;
-        //double dist_btw;
         double dist;
-        //double task_length;
-        double costPerK;
-        double total_dist = 0;
         City current_city;
 
 

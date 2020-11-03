@@ -26,6 +26,8 @@ public class Centralized implements CentralizedBehavior {
     private double timeout_planLook;
     private double timeout_planDig;
     private double prob;
+    private int digIter;
+    private int lookIter;
 
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
@@ -39,89 +41,79 @@ public class Centralized implements CentralizedBehavior {
             System.out.println("There was a problem loading the configuration file.");
         }
 
-        // the setup method cannot last more than timeout_setup milliseconds
-        // this.timeout_setup = ls.get(LogistSettings.TimeoutKey.SETUP);
         // the plan method cannot execute more than timeout_plan milliseconds
         assert ls != null;
         this.timeout_planLook = ls.get(LogistSettings.TimeoutKey.PLAN) * 0.95;
         this.timeout_planDig = ls.get(LogistSettings.TimeoutKey.PLAN) * 0.05;
         this.agent = agent;
         this.prob =  Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
+        this.lookIter =  Integer.parseInt(this.agent.readProperty("lookIter", String.class, "10000"));
+        this.digIter =  Integer.parseInt(this.agent.readProperty("digIter", String.class, "10"));
     }
 
     @Override
     public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
         long time_start = System.currentTimeMillis();
+        boolean demo = false;
 
-        //initialize the variable as null lists
-        int nT = tasks.size();
-        int nV = vehicles.size();
-        List<Variables> N;
-        Variables BestChoice = new Variables();
+        // Init task distribution
         Variables var = new Variables(vehicles, tasks);
-        double AbsoluteBestCost = Double.POSITIVE_INFINITY;
-        int NoImprovement = 0;
-        int NoLocalImp = 0;
-        int i = 0;
 
+        // Search solution
         var.selectInitialSolution(vehicles);
-        while (NoImprovement < 10000 &&
-                checkTimeConstraint(time_start, this.timeout_planLook)) {
-            //System.out.println("Choose neighbours");
-            N = var.chooseNeighbour();
-            System.out.println("Proposed " + N.size() + " neighbors");
-            var = var.LocalChoice(N, AbsoluteBestCost, this.prob);
-            if (var.BestCost >= AbsoluteBestCost) {
-                if (var.localChoiceBool) {
-                    NoImprovement++;
-                }
-                System.out.println("NO IMPROVEMENT: " + NoImprovement);
-            } else {
-                AbsoluteBestCost = var.BestCost;
-                NoImprovement = 0;
-                BestChoice = var;
-                System.out.println("IMPROVEMENT: ");
-            }
-            System.out.println("BEST COST " + var.BestCost);
-            System.out.println("Absolute COST " + AbsoluteBestCost);
-        }
+        var = SLS(var, this.prob, this.lookIter, time_start, this.timeout_planLook, Double.POSITIVE_INFINITY);
 
-        //Dig best choice
+        //Dig more best choice
 
-        long time_startDig = System.currentTimeMillis();
-        var = BestChoice;
-        NoImprovement = 0;
-        while (NoImprovement < 10 &&
-                checkTimeConstraint(time_start, this.timeout_planDig)) {
+        long time_dig = System.currentTimeMillis();
+        var = SLS(var, 1., this.digIter, time_dig, this.timeout_planDig, var.BestCost);
 
-            N = var.chooseNeighbour();
-            System.out.println("Proposed " + N.size() + " neighbors");
-            var = var.LocalChoice(N, AbsoluteBestCost, 1);
-            if (var.BestCost >= AbsoluteBestCost) {
-                if (var.localChoiceBool) {
-                    NoImprovement++;
-                }
-                System.out.println("NO IMPROVEMENT: " + NoImprovement);
-            } else {
-                AbsoluteBestCost = var.BestCost;
-                NoImprovement = 0;
-                BestChoice = var;
-                System.out.println("IMPROVEMENT: ");
-            }
+        // output result and return plan
 
-            System.out.println("BEST COST " + var.BestCost);
-            System.out.println("Absolute COST " + AbsoluteBestCost);
-        }
-        var = BestChoice;
+        if (demo) { verboseOut(var.BestCost, time_start); }
+        else { System.out.println("Generating plan"); }
 
-
-        System.out.println("Loop over");
-
-        List<Plan> SLSPlan = createPlan(var, vehicles, tasks);
-
-        return SLSPlan;
+        return createPlan(var, vehicles, tasks);
     }
 
+    private void verboseOut(double bestCost, long time_start){
+        System.out.println("----RESULT----");
+        System.out.println("Params: \niter:\t"+ this.lookIter + "\niter2:\t" + this.digIter + "\np:\t" + this.prob);
+        double elapsed_time = (System.currentTimeMillis() - time_start)/1000.;
+        System.out.println("Time (s):\t"+ elapsed_time);
+        System.out.println("Cost:\t" + bestCost);
+        System.exit(0);
+    }
+
+    private Variables SLS(Variables var, double prob, int stopIter,
+                          long time_start, Double timeout_plan, double absoluteBestCost) {
+        List<Variables> N;
+        Variables BestChoice = var.copy();
+        int NoLocalImp = 0;
+        int i = 0;
+        int NoImprovement = 0;
+
+        while (NoImprovement < stopIter &&
+                checkTimeConstraint(time_start, timeout_plan)) {
+            N = var.chooseNeighbour();
+            System.out.println("Proposed " + N.size() + " neighbors");
+            var = var.LocalChoice(N, prob);
+            if (var.BestCost >= absoluteBestCost) {
+                if (var.localChoiceBool) {
+                    NoImprovement++;
+                }
+                System.out.println("NO IMPROVEMENT: " + NoImprovement);
+            } else {
+                absoluteBestCost = var.BestCost;
+                NoImprovement = 0;
+                BestChoice = var;
+                System.out.println("IMPROVEMENT: ");
+            }
+            System.out.println("BEST COST " + var.BestCost);
+        }
+
+        return BestChoice;
+    }
 
     private List<Plan> createPlan(Variables A, List<Vehicle> vehicles, TaskSet tasks) {
         ArrayList<Plan> multiVPlan = new ArrayList<>();
@@ -165,10 +157,5 @@ public class Centralized implements CentralizedBehavior {
     boolean checkTimeConstraint(long time_start, double timeConstraint) {
         return System.currentTimeMillis() - time_start < timeConstraint;
     }
-
-    /*private Plan SLSPlan(Vehicle vehicle, TaskSet tasks, Variables var) {
-        //TODO
-
-    }*/
 
 }
