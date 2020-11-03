@@ -152,7 +152,7 @@ public class Variables implements Cloneable{
             }
             t = oldA.nextTaskV.get(v_i);
 
-            while (t != null) {
+            //while (t != null) {
                 if (t.type.equals("deliver")) {
                     t = oldA.nextTaskT.get(t);
                     continue;
@@ -164,7 +164,7 @@ public class Variables implements Cloneable{
                 }
 
                 t = oldA.nextTaskT.get(t);
-            }
+            //}
 
         }
 

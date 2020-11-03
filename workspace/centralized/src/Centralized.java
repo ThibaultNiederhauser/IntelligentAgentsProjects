@@ -29,7 +29,7 @@ public class Centralized implements CentralizedBehavior {
     private Agent agent;
     private long timeout_setup;
     private long timeout_plan;
-    private final double p = 0.6;
+    private final double p = 0.4;
 
 
     @Override
@@ -71,7 +71,7 @@ public class Centralized implements CentralizedBehavior {
         int i = 0;
 
         var.selectInitialSolution(vehicles);
-        while(i < 5) {
+        while(NoImprovement < 10000) {
             //System.out.println("Choose neighbours");
             N = var.chooseNeighbour();
             System.out.println("Neighbours chosen " + i);
@@ -91,14 +91,47 @@ public class Centralized implements CentralizedBehavior {
             }
             System.out.println("BEST COST " + var.BestCost);
             System.out.println("Absolute COST " + AbsoluteBestCost);
-            if(NoImprovement > 1000){ //Go back to best choice
-                var = BestChoice;
-                NoImprovement = 0;
-                N = var.chooseNeighbour();
-                var = var.LocalChoice(N, AbsoluteBestCost, 1);
-                i++;
-            }
+            //if(NoImprovement > 1000){ //Go back to best choice
+            //    var = BestChoice;
+             //   NoImprovement = 0;
+              //  N = var.chooseNeighbour();
+               // var = var.LocalChoice(N, AbsoluteBestCost, 1);
+               // i++;
+           // }
         }
+        //Dig best choice
+        var = BestChoice;
+        NoImprovement = 0;
+        while(NoImprovement < 10) {
+            //System.out.println("Choose neighbours");
+            N = var.chooseNeighbour();
+            System.out.println("Neighbours chosen " + i);
+            var = var.LocalChoice(N, AbsoluteBestCost, 1);
+            if(var.BestCost >= AbsoluteBestCost){
+                if(var.localChoiceBool){
+                    NoImprovement++;
+                }
+                System.out.println("NO IMPROVMENT: " + NoImprovement);
+            }
+            else{
+                AbsoluteBestCost = var.BestCost;
+                NoImprovement = 0;
+                BestChoice = var;
+                System.out.println("IMPROVMENT: ");
+            }
+
+            System.out.println("BEST COST " + var.BestCost);
+            System.out.println("Absolute COST " + AbsoluteBestCost);
+            //if(NoImprovement > 1000){ //Go back to best choice
+            //    var = BestChoice;
+            //   NoImprovement = 0;
+            //  N = var.chooseNeighbour();
+            // var = var.LocalChoice(N, AbsoluteBestCost, 1);
+            // i++;
+            // }
+        }
+        var = BestChoice;
+
 
         System.out.println("Loop over");
 
@@ -107,30 +140,6 @@ public class Centralized implements CentralizedBehavior {
         return SLSPlan;
     }
 
-    private Plan naivePlan(Vehicle vehicle, TaskSet tasks) {
-        City current = vehicle.getCurrentCity();
-        Plan plan = new Plan(current);
-
-        for (Task task : tasks) {
-            // move: current city => pickup location
-            for (City city : current.pathTo(task.pickupCity)) {
-                plan.appendMove(city);
-            }
-
-            plan.appendPickup(task);
-
-            // move: pickup location => delivery location
-            for (City city : task.path()) {
-                plan.appendMove(city);
-            }
-
-            plan.appendDelivery(task);
-
-            // set current city
-            current = task.deliveryCity;
-        }
-        return plan;
-    }
 
     private List<Plan> createPlan(Variables A, List<Vehicle> vehicles, TaskSet tasks){
         ArrayList<Plan> multiVPlan = new ArrayList<>();
