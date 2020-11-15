@@ -57,13 +57,13 @@ public class Variables implements Cloneable {
         }
     }
 
-    public void selectInitialSolution(List<Vehicle> vehicle_list) {
+    public void selectInitialSolution() {
         double dist;
         double shortestDist;
         PUDTask firstTask;
         PUDTask tDeliver;
         Vehicle candidate;
-        int i = 0;
+        //int i = 0;
         for (PUDTask t : this.PUDTaskSet) {
             if (t.type == "deliver") {
                 continue;
@@ -94,6 +94,7 @@ public class Variables implements Cloneable {
             this.vehicle.put(tDeliver, candidate);
 
         }
+
         for (Vehicle v : this.vehicleList) {
             this.updateTime(v);
         }
@@ -124,7 +125,6 @@ public class Variables implements Cloneable {
             t = oldA.nextTaskV.get(v_i);
 
             if (t.type.equals("deliver")) {
-                t = oldA.nextTaskT.get(t);
                 continue;
             }
 
@@ -132,8 +132,6 @@ public class Variables implements Cloneable {
                 A = changingVehicle(oldA, v_i, v_j, t);
                 N.add(A);
             }
-
-            t = oldA.nextTaskT.get(t);
 
         }
 
@@ -288,7 +286,6 @@ public class Variables implements Cloneable {
 
 
         //CHECK if inversion possible
-
         PUDTask pickT = getPUDTask(t2.task, "pick");
         if (t2.type.equals("deliver")
                 && A.time.get(pickT) >= A.time.get(t1)) {
@@ -383,8 +380,6 @@ public class Variables implements Cloneable {
         System.out.println(val);
 
 
-        //boolean numb = true;
-        //numb = bestN.nextTaskV.equals(this.nextTaskT);
         if (val) {
             choice.BestCost = bestCost;
             choice.localChoiceBool = true;

@@ -58,7 +58,7 @@ public class Centralized implements CentralizedBehavior {
         Variables var = new Variables(vehicles, tasks);
 
         // Search solution
-        var.selectInitialSolution(vehicles);
+        var.selectInitialSolution();
         var = SLS(var, this.prob, this.lookIter, time_start, this.timeout_planLook, Double.POSITIVE_INFINITY);
 
         //Dig more best choice
@@ -108,6 +108,8 @@ public class Centralized implements CentralizedBehavior {
                 System.out.println("IMPROVEMENT: ");
             }
             System.out.println("BEST COST " + var.BestCost);
+            System.out.println("ABSOLUTE BEST COST " + absoluteBestCost);
+
         }
 
         return BestChoice;
