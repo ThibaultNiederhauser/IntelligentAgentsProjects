@@ -50,6 +50,7 @@ public class AuctionTemplate implements AuctionBehavior {
 		if (winner == agent.id()) {
 			currentCity = previous.deliveryCity;
 		}
+		System.out.println("auction results");
 	}
 	
 	@Override
