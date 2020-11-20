@@ -37,7 +37,7 @@ public class Variables implements Cloneable {
         this.vehicleList = vehicles;
     }
 
-    private void reinit(){
+    private void reinit() {
         initNextTask(this.vehicleList);
         initVehicle();
         initTime();
@@ -410,7 +410,9 @@ public class Variables implements Cloneable {
 
             return choice;
         } else {
-            if(N.size() > 1){N.remove(choice);}
+            if (N.size() > 1) {
+                N.remove(choice);
+            }
             int randInd = random.nextInt(N.size());
             Variables RandomChoice = N.get(randInd);
             RandomChoice.localChoiceBool = false;
@@ -453,7 +455,7 @@ public class Variables implements Cloneable {
         return c;
     }
 
-    public void addTask(Task task){
+    public void addTask(Task task) {
         this.PUDTaskSet.add(new PUDTask(task, "pick"));
         this.PUDTaskSet.add(new PUDTask(task, "deliver"));
 

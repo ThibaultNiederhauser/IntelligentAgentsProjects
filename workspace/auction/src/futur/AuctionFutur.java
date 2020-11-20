@@ -20,7 +20,6 @@ import java.util.Random;
 /**
  * A very simple auction agent that assigns all tasks to its first vehicle and
  * handles them sequentially.
- *
  */
 @SuppressWarnings("unused")
 public class AuctionFutur implements AuctionBehavior {
@@ -53,23 +52,25 @@ public class AuctionFutur implements AuctionBehavior {
         this.currentCity = vehicleList.get(0).homeCity();
 
         this.timeoutBid = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.BID);
-        this.timeoutPlanLook = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.PLAN)*0.95;
-        this.timeoutPlanDig =  LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.PLAN)*0.05;
+        this.timeoutPlanLook = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.PLAN) * 0.94;  // a bit less
+        this.timeoutPlanDig = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.PLAN) * 0.05;
 
         long seed = -9019554669489983951L * currentCity.hashCode() * agent.id();
         this.random = new Random(seed);
         this.currentCost = 0;
         this.currentVariables = null;
 
-        this.prob =  Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
-        this.lookIter =  Integer.parseInt(this.agent.readProperty("lookIter", String.class, "10000"));
+        this.prob = Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
+        this.lookIter = Integer.parseInt(this.agent.readProperty("lookIter", String.class, "1000"));  //nicnic this can actually even be 100 if we need to pick time
     }
 
     @Override
     public void auctionResult(Task previous, int winner, Long[] bids) {
         if (winner == agent.id()) {
-           this.currentVariables = winVar;
-           this.currentCost += this.marginalCost;
+            this.currentVariables = winVar;
+            this.currentCost += this.marginalCost;
+        } else {
+            return;  // we can have a list of enemy tasks and a subset of intelligence to esistimate how it will have benefit picking a task
         }
 
         System.out.println("auction results");
@@ -82,24 +83,24 @@ public class AuctionFutur implements AuctionBehavior {
         long margin = 10;
         Variables extendedVar = null;
 
-        //Check that task can be carried
-        for(Vehicle v : this.vehicleList){
-            if(v.capacity() >= task.weight){
-                tooHeavy = false;
-            }
-        }
-        if(tooHeavy){return null;}
+        //Check that task can be carried  //nicnic, not needed, the sls will finally do this or decide another moment to pick this
+//        for(Vehicle v : this.vehicleList){
+//            if(v.capacity() >= task.weight){
+//                tooHeavy = false;
+//            }
+//        }
+//        if(tooHeavy){return null;}
 
-        //compute marginal cost
-        if(currentVariables == null){
-            ArrayList<Task> receivedTasks = new ArrayList<>();
+        // compute marginal cost
+        if (this.currentVariables == null) {
+            ArrayList<Task> receivedTasks = new ArrayList<>();  //nicnic can use a stored list
             receivedTasks.add(task);
             this.winVar = new Variables(this.vehicleList, receivedTasks);
             winVar.selectInitialSolution();
 
-            this.marginalCost = winVar.costFunction();
-        }
-        else{
+            this.marginalCost = winVar.costFunction(); //nicnic check this
+
+        } else {
 
             extendedVar = this.currentVariables.copy();
 
@@ -126,9 +127,9 @@ public class AuctionFutur implements AuctionBehavior {
         System.out.println("return plan");
 
         //Remap plan with the new taskSet
-        for(Task newT:tasks){
-            for(PUDTask oldT:this.currentVariables.PUDTaskSet){
-                if(newT.id == oldT.task.id){
+        for (Task newT : tasks) {
+            for (PUDTask oldT : this.currentVariables.PUDTaskSet) {
+                if (newT.id == oldT.task.id) {
                     oldT.task = newT;
                 }
             }
@@ -139,11 +140,11 @@ public class AuctionFutur implements AuctionBehavior {
 
     //********** AUX FUNCTIONS ***********//
 
-    private void verboseOut(double bestCost, long time_start){
+    private void verboseOut(double bestCost, long time_start) {
         System.out.println("----RESULT----");
-        System.out.println("Params: \niter:\t"+ this.lookIter + "\np:\t" + this.prob);
-        double elapsed_time = (System.currentTimeMillis() - time_start)/1000.;
-        System.out.println("Time (s):\t"+ elapsed_time);
+        System.out.println("Params: \niter:\t" + this.lookIter + "\np:\t" + this.prob);
+        double elapsed_time = (System.currentTimeMillis() - time_start) / 1000.;
+        System.out.println("Time (s):\t" + elapsed_time);
         System.out.println("Cost:\t" + bestCost);
         System.exit(0);
     }
@@ -159,18 +160,16 @@ public class AuctionFutur implements AuctionBehavior {
         while (NoImprovement < stopIter &&
                 checkTimeConstraint(time_start, timeout_plan)) {
             N = var.chooseNeighbour();
-            //System.out.println("Proposed " + N.size() + " neighbors");
             var = var.LocalChoice(N, prob);
             if (var.BestCost >= absoluteBestCost) {
                 if (var.localChoiceBool) {
                     NoImprovement++;
                 }
-              //  System.out.println("NO IMPROVEMENT: " + NoImprovement);
             } else {
                 absoluteBestCost = var.BestCost;
                 NoImprovement = 0;
                 BestChoice = var;
-              //  System.out.println("IMPROVEMENT: ");
+                //  System.out.println("IMPROVEMENT: ");
             }
             //System.out.println("BEST COST " + var.BestCost);
             //System.out.println("ABSOLUTE BEST COST " + absoluteBestCost);
