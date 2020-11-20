@@ -1,4 +1,4 @@
-package AuctionFutur;
+package futur;
 
 import logist.simulation.Vehicle;
 import logist.task.Task;
@@ -190,7 +190,7 @@ public class Variables implements Cloneable {
         A_copy.vehicle = (HashMap<PUDTask, Vehicle>) this.vehicle.clone();
         A_copy.nextTaskV = (HashMap<Vehicle, PUDTask>) this.nextTaskV.clone();
         A_copy.nextTaskT = (HashMap<PUDTask, PUDTask>) this.nextTaskT.clone();
-        A_copy.PUDTaskSet = this.PUDTaskSet;
+        A_copy.PUDTaskSet = new ArrayList<>(this.PUDTaskSet);
         A_copy.BestCost = this.BestCost;
         A_copy.vehicleList = this.vehicleList;
 

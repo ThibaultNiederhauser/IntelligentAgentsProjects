@@ -1,4 +1,4 @@
-package AuctionFutur;
+package futur;
 
 import logist.task.Task;
 

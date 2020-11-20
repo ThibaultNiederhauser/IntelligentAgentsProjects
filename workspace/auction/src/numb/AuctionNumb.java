@@ -1,13 +1,11 @@
-
+package numb;
 //the list of imports
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
 import logist.LogistPlatform;
 import logist.LogistSettings;
-import logist.Measures;
 import logist.behavior.AuctionBehavior;
 import logist.agent.Agent;
 import logist.simulation.Vehicle;
@@ -61,7 +59,6 @@ public class AuctionNumb implements AuctionBehavior {
         this.random = new Random(seed);
         this.currentCost = 0;
         this.currentVariables = null;
-
         this.prob =  Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
         this.lookIter =  Integer.parseInt(this.agent.readProperty("lookIter", String.class, "10000"));
     }
@@ -116,6 +113,8 @@ public class AuctionNumb implements AuctionBehavior {
 
             this.winVar = extendedVar;
         }
+        long a = marginalCost + margin;
+        System.out.println("bid numb: " + a);
 
         return marginalCost + margin;
     }
@@ -190,6 +189,10 @@ public class AuctionNumb implements AuctionBehavior {
         for (Vehicle v : vehicles) {
             current = v.getCurrentCity();
             plan = new Plan(current);
+            if(A == null){
+                multiVPlan.add(plan);
+                continue;
+            }
 
             t = A.nextTaskV.get(v);
             while (t != null) {

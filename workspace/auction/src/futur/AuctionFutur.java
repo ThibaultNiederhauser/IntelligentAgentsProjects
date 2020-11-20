@@ -1,4 +1,4 @@
-package AuctionFutur;
+package futur;
 //the list of imports
 
 import logist.LogistPlatform;
@@ -14,6 +14,7 @@ import logist.topology.Topology;
 import logist.topology.Topology.City;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -25,6 +26,8 @@ import java.util.Random;
 @SuppressWarnings("unused")
 public class AuctionFutur implements AuctionBehavior {
 
+    private final double futurProba = 0.6;
+
     private Topology topology;
     private TaskDistribution distribution;
     private Agent agent;
@@ -32,8 +35,7 @@ public class AuctionFutur implements AuctionBehavior {
     private List<Vehicle> vehicleList;
 
     private City currentCity;
-    private long currentCost;
-    private long marginalCost;
+    private double marginalCost;
     private double timeoutBid;
     private double timeoutPlanLook;
     private double timeoutPlanDig;
@@ -58,7 +60,6 @@ public class AuctionFutur implements AuctionBehavior {
 
         long seed = -9019554669489983951L * currentCity.hashCode() * agent.id();
         this.random = new Random(seed);
-        this.currentCost = 0;
         this.currentVariables = null;
 
         this.prob =  Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
@@ -69,18 +70,32 @@ public class AuctionFutur implements AuctionBehavior {
     public void auctionResult(Task previous, int winner, Long[] bids) {
         if (winner == agent.id()) {
            this.currentVariables = winVar;
-           this.currentCost += this.marginalCost;
         }
-
         System.out.println("auction results");
     }
 
     @Override
     public Long askPrice(Task task) {
-        this.marginalCost = 0;
+        double bid = 0;
+        Task predictedTask;
+        City deliverCity = task.deliveryCity;
+        double predictedMarginalCost;
+        double assocProba;
+        int id = 100; //doesn't really matter
+        Variables predictedVar = null;
+        double TrueMarginal = 0;
+        ArrayList<Double> probas = new ArrayList<>();
+        ArrayList<Double> marginals = new ArrayList<>();
+        int i = 0;
+
+
         boolean tooHeavy = true;
-        long margin = 10;
-        Variables extendedVar = null;
+        int margin = 10;
+
+        if(this.currentVariables != null) {
+            //TrueMarginal = computeMarginalCost(task, this.currentVariables);
+        }
+
 
         //Check that task can be carried
         for(Vehicle v : this.vehicleList){
@@ -90,37 +105,97 @@ public class AuctionFutur implements AuctionBehavior {
         }
         if(tooHeavy){return null;}
 
-        //compute marginal cost
-        if(currentVariables == null){
+        //COMPUTE BEST PLAN IF Win
+        if(this.currentVariables == null){
             ArrayList<Task> receivedTasks = new ArrayList<>();
             receivedTasks.add(task);
             this.winVar = new Variables(this.vehicleList, receivedTasks);
-            winVar.selectInitialSolution();
-
-            this.marginalCost = winVar.costFunction();
         }
         else{
-
-            extendedVar = this.currentVariables.copy();
-
-            extendedVar.addTask(task);
-
-            extendedVar.selectInitialSolution();
-
+            this.winVar = this.currentVariables.copy();
+            this.winVar.addTask(task);
             long time_start = System.currentTimeMillis();
-
-            extendedVar = SLS(extendedVar, this.prob, this.lookIter,
-                    time_start, this.timeoutPlanLook, Double.POSITIVE_INFINITY);
-            this.marginalCost = extendedVar.costFunction() - this.currentCost; //TODO store cost int var -> no need to recall costFunction()
-
-            this.winVar = extendedVar;
+            this.winVar.selectInitialSolution();
+            this.winVar = SLS(this.winVar, this.prob, this.lookIter, time_start, this.timeoutPlanLook,
+                    Double.POSITIVE_INFINITY); //TODO timeOUt not correct
+            //TODO take this into account for bid computing or put in PLan fct
         }
 
-        return marginalCost + margin;
+        //COMPUTE BID
+        for(City from:topology) {
+            for (City to : topology) {
+                if (from == to) {
+                    continue;
+                }
+
+                predictedTask = new Task(id, from, to, 0, distribution.weight(from, to));
+                if (this.currentVariables != null) {
+                    predictedVar = this.currentVariables.copy();
+                    predictedVar.addTask(predictedTask);
+                } else {
+                    ArrayList<Task> receivedTasks = new ArrayList<>();
+                    receivedTasks.add(predictedTask);
+                    predictedVar = new Variables(this.vehicleList, receivedTasks);
+                }
+
+                //.println("predicting for task nb: " + id);
+                predictedVar.selectInitialSolution();
+                predictedMarginalCost = computeMarginalCost(task, predictedVar);
+                assocProba = this.distribution.probability(from, to)/topology.size();
+
+                if(probas.size() <= 0){
+                    probas.add(assocProba);
+                    marginals.add(predictedMarginalCost);
+                }
+                else{
+                    //find value
+                    i = 0;
+                    while(i<marginals.size()){
+                        if(predictedMarginalCost <= marginals.get(i)){
+                            break;
+                        }
+                        i++;
+                    }
+                    // shift second half
+                    marginals.add(marginals.get(marginals.size()-1));
+                    probas.add(probas.get(probas.size()-1));
+
+                    for(int j = marginals.size() - 2; j>=i; j--) {
+                        marginals.set(j + 1, marginals.get(j));
+                        probas.set(j+1, probas.get(j));
+                    }
+
+                    //insert new value
+                    marginals.add(i, predictedMarginalCost);
+                    probas.add(i, assocProba);
+                }
+
+
+
+                //bid += assocProba * predictedMarginalCost;
+
+                id += 1;
+            }
+        }
+
+        double cumulProba = 0;
+        for(int k = marginals.size()-1; k >= 0; k--){
+            cumulProba += probas.get(k);
+            if(cumulProba > (1- this.futurProba)){
+                bid = marginals.get(k);
+                break;
+            }
+        }
+
+
+        System.out.println("bid futur: " + (long) Math.round(bid + margin));
+
+        return (long) Math.round(bid + margin);
     }
 
     @Override
     public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
+
         long time_start = System.currentTimeMillis();
         boolean demo = false;
         System.out.println("return plan");
@@ -134,10 +209,44 @@ public class AuctionFutur implements AuctionBehavior {
             }
         }
 
+
         return createPlan(this.currentVariables, vehicles, tasks);
     }
 
     //********** AUX FUNCTIONS ***********//
+
+
+    private Double computeMarginalCost(Task task, Variables var){
+        double marginalCost = 0;
+        Variables extendedVar = null;
+        //compute marginal cost
+        /**if(var == null){
+            ArrayList<Task> receivedTasks = new ArrayList<>();
+            receivedTasks.add(task);
+            extendedVar = new Variables(this.vehicleList, receivedTasks);
+            extendedVar.selectInitialSolution();
+
+            marginalCost = extendedVar.costFunction();
+        }**/
+        //else {
+
+
+        extendedVar = var.copy();
+        extendedVar.addTask(task);
+
+        long time_start = System.currentTimeMillis();
+        var = SLS(var, this.prob, this.lookIter,
+                time_start, this.timeoutPlanLook, Double.POSITIVE_INFINITY);
+
+        extendedVar.selectInitialSolution();
+        time_start = System.currentTimeMillis();
+        extendedVar = SLS(extendedVar, this.prob, this.lookIter,
+                time_start, this.timeoutPlanLook, Double.POSITIVE_INFINITY);
+        marginalCost = extendedVar.costFunction() - var.costFunction(); //TODO store cost int var -> no need to recall costFunction()
+       //}
+
+        return marginalCost;
+    }
 
     private void verboseOut(double bestCost, long time_start){
         System.out.println("----RESULT----");
@@ -184,12 +293,15 @@ public class AuctionFutur implements AuctionBehavior {
         ArrayList<Plan> multiVPlan = new ArrayList<>();
         PUDTask t;
         City current;
-        Plan plan;
+        Plan plan ;
 
         for (Vehicle v : vehicles) {
             current = v.getCurrentCity();
             plan = new Plan(current);
-
+            if(A == null){
+                multiVPlan.add(plan);
+                continue;
+            }
             t = A.nextTaskV.get(v);
             while (t != null) {
                 // move: current city => pickup location

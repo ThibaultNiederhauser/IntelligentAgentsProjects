@@ -11,9 +11,21 @@
 
 	<agent name="auction-numb">
 		<set class-path="bin/"/>
-		<set class-name = "AuctionNumb"/>
+		<set class-name = "numb.AuctionNumb"/>
 		<set prob="0.8"/>
-		<set lookIter="10000"/>
+		<set lookIter="5000"/>
+	</agent>
+
+	<agent name="auction-futur">
+		<set class-path="bin/"/>
+		<set class-name = "futur.AuctionFutur"/>
+		<set prob="0.8"/>
+		<set lookIter="500"/>
+	</agent>
+
+	<agent name="auction-jelena">
+		<set class-path="bin/"/>
+		<set class-name = "templateJ.CentralizedAuctionAgent"/>
 	</agent>
 	
 </agents>
