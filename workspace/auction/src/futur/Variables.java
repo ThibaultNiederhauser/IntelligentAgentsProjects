@@ -449,14 +449,12 @@ public class Variables implements Cloneable {
 
             c += dist * v.costPerKm();
         }
-
         return c;
     }
 
     public void addTask(Task task){
         this.PUDTaskSet.add(new PUDTask(task, "pick"));
         this.PUDTaskSet.add(new PUDTask(task, "deliver"));
-
-        this.reinit();
+        this.reinit(); //TODO improve
     }
 }
