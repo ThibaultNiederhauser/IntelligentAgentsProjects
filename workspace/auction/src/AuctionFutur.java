@@ -1,4 +1,3 @@
-package futur;
 //the list of imports
 
 import logist.LogistPlatform;
@@ -95,6 +94,9 @@ public class AuctionFutur implements AuctionBehavior {
 
         //compute bid
         long marginal = this.computeSmartBidding(task);
+
+
+
         long bid_val = Math.max(marginal + this.margin, 100);
         System.out.println("bidding: " + bid_val);
         return bid_val;
@@ -158,6 +160,11 @@ public class AuctionFutur implements AuctionBehavior {
         finalMarginal += (double) (startCost-costBefore) * (1-sumprob);
         System.out.println("Solve in time: " + (System.currentTimeMillis() - time_start)/1000   +  " explored "  + (int) (sumprob*100)+ "% probs");
         System.out.println("cost: " + finalMarginal);
+
+
+        //margin = computeMargin
+
+
         return finalMarginal;
     }
 

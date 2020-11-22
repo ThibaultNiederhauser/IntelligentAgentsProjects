@@ -1,5 +1,3 @@
-package futur;
-
 import logist.simulation.Vehicle;
 import logist.task.Task;
 import logist.task.TaskSet;

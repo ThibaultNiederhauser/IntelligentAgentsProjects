@@ -1,6 +1,3 @@
-package futur;
-
-
 
 public class Node {
 
