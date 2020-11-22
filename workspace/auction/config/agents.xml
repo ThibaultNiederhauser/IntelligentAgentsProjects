@@ -11,14 +11,14 @@
 
 	<agent name="auction-numb">
 		<set class-path="bin/"/>
-		<set class-name = "numb.AuctionNumb"/>
+		<set class-name = "AuctionNumb"/>
 		<set prob="0.8"/>
 		<set lookIter="5000"/>
 	</agent>
 
 	<agent name="auction-futur">
 		<set class-path="bin/"/>
-		<set class-name = "futur.AuctionFutur"/>
+		<set class-name = "AuctionFutur"/>
 		<set prob="0.8"/>
 		<set lookIter="300"/>
 		<set nodeResolution="0.01"/>
