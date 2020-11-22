@@ -30,10 +30,9 @@ public class AuctionFutur implements AuctionBehavior {
     private double marginalCost;
     private double timeoutBid;
     private double timeoutPlan;
+    // Tradeoff exploitation/exploration for SLS
     private double prob;
-    private double nodeResolution;
-    private double nodeTrash;
-    private double tycoonMargin;
+    // Iters check by SLS
     private int lookIter;
 
     private Variables currentVariables;
@@ -61,6 +60,16 @@ public class AuctionFutur implements AuctionBehavior {
     private final double neighDiscount = 0.5;
     //how much the bid increased compared to opponent's predicted bid (between 0 and 1)
     private final double agressivenessFactor = 0.6;
+    // Split resolution for the future prob tree search. If p(node) > resolution we will explore the node
+    private double nodeResolution;
+    // Low probabilities, not worth computing if smaller
+    private double nodeTrash;
+    // Discout for future parameters in the probability tree
+    private double discountFuture;
+    // Every task we get we act more greedy since we might be in deficit
+    private double tycoonMargin;
+
+
 
 
     @Override
@@ -85,6 +94,7 @@ public class AuctionFutur implements AuctionBehavior {
         this.nodeResolution = Double.parseDouble(this.agent.readProperty("nodeResolution", String.class, "0.05"));
         this.nodeTrash = Double.parseDouble(this.agent.readProperty("nodeTrash", String.class, "0.005"));
         this.tycoonMargin = Double.parseDouble(this.agent.readProperty("tycoonMargin", String.class, "0.2"));
+        this.discountFuture = Double.parseDouble(this.agent.readProperty("discountFuture", String.class, "0.5"));
         this.lookIter = Integer.parseInt(this.agent.readProperty("lookIter", String.class, "300"));
     }
 
@@ -227,7 +237,7 @@ public class AuctionFutur implements AuctionBehavior {
 
                     Node next_node = new Node(next_var, next_prob, current.deep + 1, cost);
 
-                    if (next_node.prob < this.nodeResolution || next_node.deep > Math.max(1, 5. - this.auctionNumber)) {
+                    if (next_node.prob < this.nodeResolution || next_node.deep >= Math.max(1, 5. - this.auctionNumber)) {
                         toRank.add(next_node.light());  // version without variables
                     } else {
                         Q.add(next_node);
@@ -243,14 +253,14 @@ public class AuctionFutur implements AuctionBehavior {
             }
         }
         long finalMarginal = 0;
-        double discoutfct = .60;
         double sumprob = 0;
         for (Node n : toRank) {
-            double deepFactor = ((1.+(double)ntask+ (double)n.deep*discoutfct) / (1.+(double)ntask));
+            double deepFactor = ((1.+(double)ntask+ (double)n.deep*this.discountFuture) / (1.+(double)ntask));
             finalMarginal += (double) (n.cost - costBefore) * n.prob / deepFactor ;
             sumprob += n.prob;
         }
         finalMarginal += (double) (nextCost - costBefore) * (1 - sumprob);
+        finalMarginal = finalMarginal/2 + (nextCost - costBefore)/2;
         System.out.println("Solve in time: " + (System.currentTimeMillis() - time_start) / 1000 + "s explored " + (int) (sumprob * 100) + "% probs");
         return finalMarginal;
     }
