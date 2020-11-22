@@ -95,7 +95,7 @@ public class Variables implements Cloneable {
 
             for (Vehicle v : this.vehicleList) {
                 dist = v.homeCity().distanceTo(t.task.pickupCity);
-                if (dist < shortestDist && t.task.weight < v.capacity()) {
+                if (dist < shortestDist && t.task.weight <= v.capacity()) {
                     shortestDist = dist;
                     candidate = v;
                 }

@@ -188,6 +188,8 @@ public class AuctionFutur implements AuctionBehavior {
 
     //********** AUX FUNCTIONS ***********//
 
+    private
+
     private void verboseOut(double bestCost, long time_start) {
         System.out.println("----RESULT----");
         System.out.println("Params: \niter:\t" + this.lookIter + "\np:\t" + this.prob);
