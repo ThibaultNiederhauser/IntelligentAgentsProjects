@@ -43,6 +43,21 @@ public class AuctionFutur implements AuctionBehavior {
     private int margin = 150;
     private long revenue;
 
+    private ArrayList<Task> taskHistory = new ArrayList<>();
+    private HashMap<Task, Long> OpponentBidHistory = new HashMap<>();
+    private HashMap<Task, Double> discounts = new HashMap<>();
+    private long bid;
+    private ArrayList<Task> OpponentTasks = new ArrayList<>();
+    private int oppMaxCapacity = Integer.MAX_VALUE;
+
+
+    //****PARAMETERS***//
+    private final double percentageMargin = 0.1; //
+    private final double loseDiscount = 0; //discount factors for bid prediction after opponent won a task
+    private final double neighDiscount = 0.5; //discount of neighbouring city for bid pred
+    private final double agressivityFactor = 0.6; // btw 0 and 1.
+
+
     @Override
     public void setup(Topology topology, TaskDistribution distribution,
                       Agent agent) {
@@ -70,14 +85,56 @@ public class AuctionFutur implements AuctionBehavior {
 
     @Override
     public void auctionResult(Task previous, int winner, Long[] bids) {
+        boolean oppBidsNull = true;
+
         System.out.println("bids"+ Arrays.toString(bids));
+
+        //algo only for 1v1
+        if(bids.length > 2){
+            System.out.println("WARNING, more than one opponent! " +
+                    "Agent not optimized for this configuration!");
+        }
+
+        //Update History
+        this.discounts.put(previous, (double) 1); //update opponent's bids discount array
+        taskHistory.add(previous);
+        if(taskHistory.size() >= 5){this.margin = 10;}
+
         if (winner == agent.id()) {
             this.currentVariables = winVar;
             this.revenue+=bids[agent.id()];
             System.out.println("Vittoriaaa");
 
         }
-        System.out.println("auction results");
+        else{
+            System.out.println("TASK LOST");
+            this.OpponentTasks.add(previous);
+
+            //update discounts
+            for(Task t:taskHistory) {
+                discounts.put(t, discounts.get(t) * this.loseDiscount);
+            }
+        }
+
+        ///find opponent bid (considering 1v1)
+        for(Long b:bids) {
+            if (b!= null && b != this.bid){
+                this.OpponentBidHistory.put(previous, b);
+                oppBidsNull = false;
+                break;
+            }
+        }
+
+        //Estimate opponent max capacity
+        if(oppBidsNull && previous.weight <= this.oppMaxCapacity){
+            this.oppMaxCapacity = previous.weight - 1;
+        }
+
+        //if wrong assumption about null bid (not because unfeasible)
+        if(!oppBidsNull && previous.weight > this.oppMaxCapacity){
+            this.oppMaxCapacity = Integer.MAX_VALUE;
+        }
+        //System.out.println("auction results");
     }
 
     @Override
@@ -92,15 +149,44 @@ public class AuctionFutur implements AuctionBehavior {
             return null;
         }
 
+        //Peculiar case: we think that the opponent will bid "null"
+        if(task.weight > this.oppMaxCapacity){
+            this.bid = Long.MAX_VALUE;
+            computeWinVar(task);
+            return this.bid;
+        }
+
+
         //compute bid
         long marginal = this.computeSmartBidding(task);
 
+        //compute margin based on opponents bids
+        long OppMargin = computeMargin(task);
 
-
-        long bid_val = Math.max(marginal + this.margin, 100);
+        long bid_val = Math.max(Math.max(marginal + this.margin, marginal + OppMargin),100);
         System.out.println("bidding: " + bid_val);
-        return bid_val;
+        this.bid = bid_val;
+        return this.bid;
     }
+
+    @Override
+    public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
+
+        long time_start = System.currentTimeMillis();
+        boolean demo = false;
+        System.out.println("return plan");
+
+        //Remap plan with the new taskSet
+        for (Task newT : tasks) {
+            for (PUDTask oldT : this.currentVariables.PUDTaskSet) {
+                if (newT.id == oldT.task.id) {
+                    oldT.task = newT;
+                }
+            }
+        }
+        return createPlan(this.currentVariables, vehicles, tasks);
+    }
+
 
     private long computeSmartBidding(Task task) {
         this.winVar = computeWinVar(task);
@@ -162,33 +248,66 @@ public class AuctionFutur implements AuctionBehavior {
         System.out.println("cost: " + finalMarginal);
 
 
-        //margin = computeMargin
-
 
         return finalMarginal;
     }
 
-    @Override
-    public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
+    private long computeMargin(Task task){
+        //Computes margin based on opponents' bids
 
-        long time_start = System.currentTimeMillis();
-        boolean demo = false;
-        System.out.println("return plan");
+        double predictedBid = 0;
+        double deltaBid = 0;
+        double denominator = 0;
+        double margin = 0;
 
-        //Remap plan with the new taskSet
-        for (Task newT : tasks) {
-            for (PUDTask oldT : this.currentVariables.PUDTaskSet) {
-                if (newT.id == oldT.task.id) {
-                    oldT.task = newT;
-                }
+        for(Task tHist:this.taskHistory){
+            if(this.OpponentBidHistory.get(tHist) == null) { continue; }
+
+            //if exact same task already seen
+            if(tHist.deliveryCity == task.deliveryCity && tHist.pickupCity == task.pickupCity){
+                predictedBid += this.OpponentBidHistory.get(tHist) * this.discounts.get(tHist);
+                denominator += this.discounts.get(tHist);
+                System.out.println("!!!task known !!!!!!");
+            }
+            //if task already seen with pickup or delivery city as neighbour
+            else if((tHist.deliveryCity == task.deliveryCity &&
+                    tHist.pickupCity.hasNeighbor(task.pickupCity)) ||
+                    (tHist.deliveryCity.hasNeighbor(task.deliveryCity) &&
+                            tHist.pickupCity == task.pickupCity)){
+
+                predictedBid += this.OpponentBidHistory.get(tHist)
+                        * this.discounts.get(tHist) * this.neighDiscount;
+                denominator += this.discounts.get(tHist) * this.neighDiscount;
+                System.out.println("!!!task known 1 N !!!!!!");
+
+            }
+            //if task already seen with both pick-up and delivery cities as neighbours
+            else if(tHist.pickupCity.hasNeighbor(task.pickupCity) &&
+                    tHist.deliveryCity.hasNeighbor(task.deliveryCity)){
+
+                predictedBid += this.OpponentBidHistory.get(tHist)
+                        * this.discounts.get(tHist) * this.neighDiscount * this.neighDiscount;
+                denominator += this.discounts.get(tHist)*this.neighDiscount * this.neighDiscount;
+                System.out.println("!!!task known 2 N!!!!!!");
             }
         }
-        return createPlan(this.currentVariables, vehicles, tasks);
+
+        //if(formerTask != null){
+        //predictedBid = this.OpponentBidHistory.get(formerTask);
+        predictedBid = predictedBid/denominator;
+        deltaBid = predictedBid - bid;
+        if(deltaBid/bid > this.percentageMargin){
+            margin = Math.round(deltaBid * this.agressivityFactor);
+        }
+        System.out.println("!!!new margin!!!!!!: " + margin);
+        //}
+
+        return (long) margin;
     }
+
 
     //********** AUX FUNCTIONS ***********//
 
-    private
 
     private void verboseOut(double bestCost, long time_start) {
         System.out.println("----RESULT----");
