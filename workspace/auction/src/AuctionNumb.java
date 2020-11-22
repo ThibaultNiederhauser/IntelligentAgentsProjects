@@ -1,19 +1,19 @@
 //the list of imports
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import logist.LogistPlatform;
 import logist.LogistSettings;
-import logist.behavior.AuctionBehavior;
 import logist.agent.Agent;
-import logist.simulation.Vehicle;
+import logist.behavior.AuctionBehavior;
 import logist.plan.Plan;
+import logist.simulation.Vehicle;
 import logist.task.Task;
 import logist.task.TaskDistribution;
 import logist.task.TaskSet;
 import logist.topology.Topology;
 import logist.topology.Topology.City;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * A very simple auction agent that assigns all tasks to its first vehicle and
@@ -68,8 +68,6 @@ public class AuctionNumb implements AuctionBehavior {
            this.currentVariables = winVar;
            this.currentCost += this.marginalCost;
         }
-
-        System.out.println("auction results");
     }
 
     @Override
@@ -113,7 +111,6 @@ public class AuctionNumb implements AuctionBehavior {
             this.winVar = extendedVar;
         }
         long a = marginalCost + margin;
-        System.out.println("bid numb: " + a);
 
         return marginalCost + margin;
     }

@@ -29,17 +29,18 @@ public class AuctionFutur implements AuctionBehavior {
     long time_start;
     private double marginalCost;
     private double timeoutBid;
-    private double timeoutPlanLook;
-    private double timeoutPlanDig;
+    private double timeoutPlan;
     private double prob;
     private double nodeResolution;
     private double nodeTrash;
+    private double tycoonMargin;
     private int lookIter;
 
     private Variables currentVariables;
     private Variables winVar;
 
     private int auctionNumber = 0;
+    private int ntask = 0;
     private int margin = 150;
     private long revenue;
 
@@ -73,8 +74,7 @@ public class AuctionFutur implements AuctionBehavior {
         City currentCity = vehicleList.get(0).homeCity();
 
         this.timeoutBid = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.BID);
-        this.timeoutPlanLook = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.PLAN) * 0.95;
-        this.timeoutPlanDig = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.PLAN) * 0.05;
+        this.timeoutPlan = LogistPlatform.getSettings().get(LogistSettings.TimeoutKey.PLAN);
 
         long seed = -99983951L * currentCity.hashCode() * agent.id();
         Random random = new Random(seed);
@@ -84,6 +84,7 @@ public class AuctionFutur implements AuctionBehavior {
         this.prob = Double.parseDouble(this.agent.readProperty("prob", String.class, "1"));
         this.nodeResolution = Double.parseDouble(this.agent.readProperty("nodeResolution", String.class, "0.05"));
         this.nodeTrash = Double.parseDouble(this.agent.readProperty("nodeTrash", String.class, "0.005"));
+        this.tycoonMargin = Double.parseDouble(this.agent.readProperty("tycoonMargin", String.class, "0.2"));
         this.lookIter = Integer.parseInt(this.agent.readProperty("lookIter", String.class, "300"));
     }
 
@@ -91,10 +92,10 @@ public class AuctionFutur implements AuctionBehavior {
     public void auctionResult(Task previous, int winner, Long[] bids) {
         boolean oppBidsNull = true;
 
-        System.out.println("bids"+ Arrays.toString(bids));
+        System.out.println("bids" + Arrays.toString(bids));
 
         //algo only for 1v1
-        if(bids.length > 2){
+        if (bids.length > 2) {
             System.out.println("WARNING, more than one opponent! " +
                     "Agent not optimized for this configuration!");
         }
@@ -102,27 +103,26 @@ public class AuctionFutur implements AuctionBehavior {
         //Update History
         this.discounts.put(previous, (double) 1); //update opponent's bids discount array
         taskHistory.add(previous);
-        if(taskHistory.size() >= 5){this.margin = 10;}
+        if (taskHistory.size() >= 5) {
+            this.margin = 10;
+        }
 
         if (winner == agent.id()) {
             this.currentVariables = winVar;
-            this.revenue+=bids[agent.id()];
-            System.out.println("Vittoriaaa");
-
-        }
-        else{
-            System.out.println("TASK LOST");
+            this.revenue += bids[agent.id()];
+            this.ntask++;
+        } else {
             this.OpponentTasks.add(previous);
 
             //update discounts
-            for(Task t:taskHistory) {
+            for (Task t : taskHistory) {
                 discounts.put(t, discounts.get(t) * this.loseDiscount);
             }
         }
 
-        ///find opponent bid (considering 1v1)
-        for(Long b:bids) {
-            if (b!= null && b != this.bid){
+        // find opponent bid (considering 1v1)
+        for (Long b : bids) {
+            if (b != null && b != this.bid) {
                 this.OpponentBidHistory.put(previous, b);
                 oppBidsNull = false;
                 break;
@@ -130,15 +130,14 @@ public class AuctionFutur implements AuctionBehavior {
         }
 
         //Estimate opponent max capacity
-        if(oppBidsNull && previous.weight <= this.oppMaxCapacity){
+        if (oppBidsNull && previous.weight <= this.oppMaxCapacity) {
             this.oppMaxCapacity = previous.weight - 1;
         }
 
-        //if wrong assumption about null bid (not because unfeasible)
-        if(!oppBidsNull && previous.weight > this.oppMaxCapacity){
+        // if wrong assumption about null bid (not because unfeasible)
+        if (!oppBidsNull && previous.weight > this.oppMaxCapacity) {
             this.oppMaxCapacity = Integer.MAX_VALUE;
         }
-        //System.out.println("auction results");
     }
 
     @Override
@@ -154,21 +153,24 @@ public class AuctionFutur implements AuctionBehavior {
         }
 
         //Peculiar case: we think that the opponent will bid "null"
-        if(task.weight > this.oppMaxCapacity){
+        if (task.weight > this.oppMaxCapacity) {
             this.bid = Long.MAX_VALUE;
             computeWinVar(task);
             return this.bid;
         }
 
-
         //compute bid
-        long marginal = this.computeSmartBidding(task);
+        long predicted_bid = this.computeSmartBidding(task);
 
         //compute margin based on opponents bids
-        long OppMargin = computeMargin(task);
+        long OppMargin = computeOppMargin(task, predicted_bid);
 
-        long bid_val = Math.max(Math.max(marginal + this.margin, marginal + OppMargin),100);
-        System.out.println("bidding: " + bid_val);
+        double tycoonMargin;
+
+        tycoonMargin = 1 + Math.min((double)ntask * this.tycoonMargin, 0.5);
+
+        long bid_val = Math.max((long) Math.max((double)predicted_bid*tycoonMargin, predicted_bid + OppMargin), 100);
+        System.out.println("cost: " + predicted_bid + " bid " + bid_val);
         this.bid = bid_val;
         return this.bid;
     }
@@ -195,10 +197,10 @@ public class AuctionFutur implements AuctionBehavior {
 
     private long computeSmartBidding(Task task) {
         this.winVar = computeWinVar(task);
-        long costBefore =  (this.isEmpty())? 0 : currentVariables.BestCost;
-        Long startCost = this.winVar.costFunction();
-        System.out.println(this.auctionNumber + " - start cost " + startCost + " cost without task " + costBefore + " money right now " + this.revenue);
-        Node root = new Node(this.winVar, 1.0, 0, startCost);
+        long costBefore = (this.isEmpty()) ? 0 : currentVariables.BestCost;
+        Long nextCost = this.winVar.costFunction();
+        System.out.println(this.auctionNumber + "-" + this.ntask + " - start cost " + costBefore + " with task: " + nextCost + " money right now: " + this.revenue + " margin so far: " + (-costBefore+this.revenue));
+        Node root = new Node(this.winVar, 1.0, 0, nextCost);
         Queue<Node> Q = new LinkedList<>();
         Q.add(root);
         List<Node> toRank = new ArrayList<>();  // will have final leaves
@@ -212,21 +214,20 @@ public class AuctionFutur implements AuctionBehavior {
                     if (from == to) {
                         continue;
                     }
-                    double next_prob = this.distribution.probability(from, to)/topology.size() * current.prob;
+                    double next_prob = this.distribution.probability(from, to) / topology.size() * current.prob;
                     if (next_prob < this.nodeTrash) continue;
 
                     Task next_task = new Task(id++, from, to, 0, distribution.weight(from, to));
                     Variables next_var = current.data.copy();
 
-                    next_var.addTask(next_task);
-                    next_var.selectInitialSolution();  // will be faster later
+                    next_var.addTaskFaster(next_task);
                     next_var = completeSLS(next_var, this.prob, this.lookIter, Double.POSITIVE_INFINITY);
 
                     Long cost = next_var.BestCost;
 
                     Node next_node = new Node(next_var, next_prob, current.deep + 1, cost);
 
-                    if (next_node.prob < this.nodeResolution || next_node.deep > Math.max(1,6-this.auctionNumber)) {
+                    if (next_node.prob < this.nodeResolution || next_node.deep > Math.max(1, 5. - this.auctionNumber)) {
                         toRank.add(next_node.light());  // version without variables
                     } else {
                         Q.add(next_node);
@@ -234,30 +235,27 @@ public class AuctionFutur implements AuctionBehavior {
                 }
             }
             // check time constraint
-            if (System.currentTimeMillis() - this.time_start > this.timeoutBid*0.8){
-                while(!Q.isEmpty()){
+            if (System.currentTimeMillis() - this.time_start > this.timeoutBid * 0.8) {
+                while (!Q.isEmpty()) {
                     Node next_node = Q.poll();
                     toRank.add(next_node.light());
                 }
             }
         }
         long finalMarginal = 0;
-        double discoutfct =.75;
+        double discoutfct = .60;
         double sumprob = 0;
         for (Node n : toRank) {
-            finalMarginal += (double) (n.cost-costBefore) * n.prob / ((double) (1+n.deep) * discoutfct);
+            double deepFactor = ((1.+(double)ntask+ (double)n.deep*discoutfct) / (1.+(double)ntask));
+            finalMarginal += (double) (n.cost - costBefore) * n.prob / deepFactor ;
             sumprob += n.prob;
         }
-        finalMarginal += (double) (startCost-costBefore) * (1-sumprob);
-        System.out.println("Solve in time: " + (System.currentTimeMillis() - time_start)/1000   +  " explored "  + (int) (sumprob*100)+ "% probs");
-        System.out.println("cost: " + finalMarginal);
-
-
-
+        finalMarginal += (double) (nextCost - costBefore) * (1 - sumprob);
+        System.out.println("Solve in time: " + (System.currentTimeMillis() - time_start) / 1000 + "s explored " + (int) (sumprob * 100) + "% probs");
         return finalMarginal;
     }
 
-    private long computeMargin(Task task){
+    private long computeOppMargin(Task task, long bid) {
         //Computes margin based on opponents' bids
 
         double predictedBid = 0;
@@ -270,16 +268,16 @@ public class AuctionFutur implements AuctionBehavior {
             if(this.OpponentBidHistory.get(tHist) == null) { continue; }
 
             //if exact same task already seen
-            if(tHist.deliveryCity == task.deliveryCity && tHist.pickupCity == task.pickupCity){
+            if (tHist.deliveryCity == task.deliveryCity && tHist.pickupCity == task.pickupCity) {
                 predictedBid += this.OpponentBidHistory.get(tHist) * this.discounts.get(tHist);
                 denominator += this.discounts.get(tHist);
                 System.out.println("!!!task known !!!!!!");
             }
             //if task already seen with pickup or delivery city as neighbour
-            else if((tHist.deliveryCity == task.deliveryCity &&
+            else if ((tHist.deliveryCity == task.deliveryCity &&
                     tHist.pickupCity.hasNeighbor(task.pickupCity)) ||
                     (tHist.deliveryCity.hasNeighbor(task.deliveryCity) &&
-                            tHist.pickupCity == task.pickupCity)){
+                            tHist.pickupCity == task.pickupCity)) {
 
                 predictedBid += this.OpponentBidHistory.get(tHist)
                         * this.discounts.get(tHist) * this.neighDiscount;
@@ -288,12 +286,12 @@ public class AuctionFutur implements AuctionBehavior {
 
             }
             //if task already seen with both pick-up and delivery cities as neighbours
-            else if(tHist.pickupCity.hasNeighbor(task.pickupCity) &&
-                    tHist.deliveryCity.hasNeighbor(task.deliveryCity)){
+            else if (tHist.pickupCity.hasNeighbor(task.pickupCity) &&
+                    tHist.deliveryCity.hasNeighbor(task.deliveryCity)) {
 
                 predictedBid += this.OpponentBidHistory.get(tHist)
                         * this.discounts.get(tHist) * this.neighDiscount * this.neighDiscount;
-                denominator += this.discounts.get(tHist)*this.neighDiscount * this.neighDiscount;
+                denominator += this.discounts.get(tHist) * this.neighDiscount * this.neighDiscount;
                 System.out.println("!!!task known 2 N!!!!!!");
             }
         }
@@ -304,8 +302,6 @@ public class AuctionFutur implements AuctionBehavior {
         if(deltaBid/this.bid > this.percentageMargin){
             margin = Math.round(deltaBid * this.agressivenessFactor);
         }
-        System.out.println("!!!new margin!!!!!!: " + margin);
-        //}
 
         return (long) margin;
     }
@@ -332,9 +328,8 @@ public class AuctionFutur implements AuctionBehavior {
 
         } else {
             this.winVar = this.currentVariables.copy();
-            this.winVar.addTask(task);  // TODO optimize
-            this.winVar.selectInitialSolution();
-            this.winVar = completeSLS(this.winVar, this.prob, this.lookIter, Double.POSITIVE_INFINITY);
+            this.winVar.addTaskFaster(task);
+            this.winVar = completeSLS(this.winVar, this.prob, 1000, this.currentVariables.BestCost);
         }
         return this.winVar;
     }
@@ -430,5 +425,4 @@ public class AuctionFutur implements AuctionBehavior {
         }
         return true;
     }
-
 }

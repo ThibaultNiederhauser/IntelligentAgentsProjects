@@ -35,7 +35,7 @@ public class Variables implements Cloneable {
         this.vehicleList = vehicles;
     }
 
-    private void reinit(){
+    private void reinit() {
         initNextTask(this.vehicleList);
         initVehicle();
         initTime();
@@ -408,7 +408,9 @@ public class Variables implements Cloneable {
 
             return choice;
         } else {
-            if(N.size() > 1){N.remove(choice);}
+            if (N.size() > 1) {
+                N.remove(choice);
+            }
             int randInd = random.nextInt(N.size());
             Variables RandomChoice = N.get(randInd);
             RandomChoice.localChoiceBool = false;
@@ -450,9 +452,47 @@ public class Variables implements Cloneable {
         return c;
     }
 
-    public void addTask(Task task){
+    public void addTask(Task task) {
         this.PUDTaskSet.add(new PUDTask(task, "pick"));
         this.PUDTaskSet.add(new PUDTask(task, "deliver"));
         this.reinit(); //TODO improve
+    }
+
+
+    public void addTaskFaster(Task task) {
+        PUDTask tp = new PUDTask(task, "pick");
+        PUDTask td = new PUDTask(task, "deliver");
+
+        this.PUDTaskSet.add(tp);
+        this.PUDTaskSet.add(td);
+
+        Vehicle candidate = null;
+        double shortestDist = Double.POSITIVE_INFINITY;
+
+        for (Vehicle v : this.vehicleList) {
+            double dist = v.homeCity().distanceTo(tp.task.pickupCity);
+            if (dist < shortestDist && tp.task.weight <= v.capacity()) {
+                shortestDist = dist;
+                candidate = v;
+            }
+        }
+
+        if (candidate == null) {
+            throw new AssertionError("Problem unsolvable!");
+        }
+
+        PUDTask firstTask = this.nextTaskV.get(candidate);
+
+        this.nextTaskV.put(candidate, tp);
+        this.nextTaskT.put(tp, td);
+        this.nextTaskT.put(td, firstTask);
+
+        //set vehicle
+        this.vehicle.put(tp, candidate);
+        this.vehicle.put(td, candidate);
+
+        this.updateTime(candidate);
+
+        this.BestCost = this.costFunction();
     }
 }
