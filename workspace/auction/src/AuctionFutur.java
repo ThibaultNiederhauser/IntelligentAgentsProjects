@@ -189,16 +189,6 @@ public class AuctionFutur implements AuctionBehavior {
             }
         }
 
-        //Compute plan
-        System.out.println("Compute final plan");
-        long time_start_plan = System.currentTimeMillis();
-        planVar = SLS(this.currentVariables, this.prob, 5000, time_start_plan,
-                this.timeoutPlanLook * 0.9, Double.POSITIVE_INFINITY);
-        //final dig
-        time_start_plan = System.currentTimeMillis();
-        planVar = SLS(planVar, 1, 1, time_start_plan, this.timeoutPlanDig,
-                planVar.BestCost);
-
         return createPlan(this.currentVariables, vehicles, tasks);
     }
 
@@ -351,7 +341,7 @@ public class AuctionFutur implements AuctionBehavior {
 
     private Variables completeSLS(Variables var, double prob, int stopIter, double absoluteBestCost) {
         var = SLS(var, this.prob, this.lookIter, 0, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-        var = SLS(var, 1, 1, 0, Double.POSITIVE_INFINITY, var.BestCost);
+        var = SLS(var, 1, 1, 0, Double.POSITIVE_INFINITY, var.costFunction());
         return var;
     }
 
