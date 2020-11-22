@@ -25,18 +25,11 @@
 		<set nodeTrash="0.0002"/>
 	</agent>
 
-	<agent name="auction-jelena">
-		<set class-path="bin/"/>
-		<set class-name = "templateJ.CentralizedAuctionAgent"/>
-	</agent>
-
 	<agent name="auction-futur-simple">
 		<set class-path="bin/"/>
 		<set class-name = "AuctionFuturSimple"/>
 		<set prob="0.8"/>
 		<set lookIter="300"/>
 	</agent>
-
-
 	
 </agents>

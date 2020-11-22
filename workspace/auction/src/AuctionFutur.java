@@ -175,9 +175,7 @@ public class AuctionFutur implements AuctionBehavior {
         //compute margin based on opponents bids
         long OppMargin = computeOppMargin(task, predicted_bid);
 
-        double tycoonMargin;
-
-        tycoonMargin = 1 + Math.min((double)ntask * this.tycoonMargin, 0.5);
+        double tycoonMargin = 1 + Math.min((double)ntask * this.tycoonMargin, 0.5);
 
         long bid_val = Math.max((long) Math.max((double)predicted_bid*tycoonMargin, predicted_bid + OppMargin), 100);
         System.out.println("cost: " + predicted_bid + " bid " + bid_val);
@@ -319,16 +317,6 @@ public class AuctionFutur implements AuctionBehavior {
 
     //********** AUX FUNCTIONS ***********//
 
-
-    private void verboseOut(double bestCost, long time_start) {
-        System.out.println("----RESULT----");
-        System.out.println("Params: \niter:\t" + this.lookIter + "\np:\t" + this.prob);
-        double elapsed_time = (System.currentTimeMillis() - time_start) / 1000.;
-        System.out.println("Time (s):\t" + elapsed_time);
-        System.out.println("Cost:\t" + bestCost);
-        System.exit(0);
-    }
-
     Variables computeWinVar(Task task) {
         if (this.isEmpty()) {
             ArrayList<Task> receivedTasks = new ArrayList<>();
@@ -339,7 +327,7 @@ public class AuctionFutur implements AuctionBehavior {
         } else {
             this.winVar = this.currentVariables.copy();
             this.winVar.addTaskFaster(task);
-            this.winVar = completeSLS(this.winVar, this.prob, 1000, this.currentVariables.BestCost);
+            this.winVar = completeSLS(this.winVar, this.prob, 3000, this.currentVariables.BestCost);
         }
         return this.winVar;
     }
