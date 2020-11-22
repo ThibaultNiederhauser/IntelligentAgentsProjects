@@ -52,10 +52,14 @@ public class AuctionFutur implements AuctionBehavior {
 
 
     //****PARAMETERS***//
-    private final double percentageMargin = 0.1; //
-    private final double loseDiscount = 0; //discount factors for bid prediction after opponent won a task
-    private final double neighDiscount = 0.5; //discount of neighbouring city for bid pred
-    private final double agressivityFactor = 0.6; // btw 0 and 1.
+    //The margin between our bid and and opponent's bid to start increasing our bid (in percentage):
+    private final double percentageMargin = 0.1;
+    //discount factors for bid history after opponent won a task (0 means discarding history completely)
+    private final double loseDiscount = 0;
+    //discount for neighbouring city in bid prediction:
+    private final double neighDiscount = 0.5;
+    //how much the bid increased compared to opponent's predicted bid (between 0 and 1)
+    private final double agressivenessFactor = 0.6;
 
 
     @Override
@@ -172,9 +176,9 @@ public class AuctionFutur implements AuctionBehavior {
     @Override
     public List<Plan> plan(List<Vehicle> vehicles, TaskSet tasks) {
 
-        long time_start = System.currentTimeMillis();
         boolean demo = false;
         System.out.println("return plan");
+        Variables planVar;
 
         //Remap plan with the new taskSet
         for (Task newT : tasks) {
@@ -184,6 +188,17 @@ public class AuctionFutur implements AuctionBehavior {
                 }
             }
         }
+
+        //Compute plan
+        System.out.println("Compute final plan");
+        long time_start_plan = System.currentTimeMillis();
+        planVar = SLS(this.currentVariables, this.prob, 5000, time_start_plan,
+                this.timeoutPlanLook * 0.9, Double.POSITIVE_INFINITY);
+        //final dig
+        time_start_plan = System.currentTimeMillis();
+        planVar = SLS(planVar, 1, 1, time_start_plan, this.timeoutPlanDig,
+                planVar.BestCost);
+
         return createPlan(this.currentVariables, vehicles, tasks);
     }
 
@@ -260,6 +275,7 @@ public class AuctionFutur implements AuctionBehavior {
         double denominator = 0;
         double margin = 0;
 
+        //Check in history
         for(Task tHist:this.taskHistory){
             if(this.OpponentBidHistory.get(tHist) == null) { continue; }
 
@@ -292,12 +308,11 @@ public class AuctionFutur implements AuctionBehavior {
             }
         }
 
-        //if(formerTask != null){
-        //predictedBid = this.OpponentBidHistory.get(formerTask);
+        //compute new margin
         predictedBid = predictedBid/denominator;
-        deltaBid = predictedBid - bid;
-        if(deltaBid/bid > this.percentageMargin){
-            margin = Math.round(deltaBid * this.agressivityFactor);
+        deltaBid = predictedBid - this.bid;
+        if(deltaBid/this.bid > this.percentageMargin){
+            margin = Math.round(deltaBid * this.agressivenessFactor);
         }
         System.out.println("!!!new margin!!!!!!: " + margin);
         //}
